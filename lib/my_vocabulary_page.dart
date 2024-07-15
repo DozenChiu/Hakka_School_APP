@@ -16,9 +16,9 @@ class MyVocabularyPage extends StatelessWidget {
         ),
       ),
       body: Center(
-        child: const Text('這是我的單字頁面'),
+        child: const Text('這是我的單字頁面'), // 中心顯示文字
       ),
-      bottomNavigationBar: const BottomNavBar(selectedIndex: 3),
+      bottomNavigationBar: const BottomNavBar(selectedIndex: 3),// 底部導航欄，點選後跳至“我的單字”頁面
     );
   }
 }

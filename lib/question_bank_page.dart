@@ -28,38 +28,41 @@ class QuestionBankPage extends StatelessWidget {
                 '聽力能力',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 20), // 添加一個高度為20的空間
               ElevatedButton.icon(
-                icon: Icon(Icons.hearing),
-                label: const Text('單句'),
+                icon: Icon(Icons.hearing), // 設置按鈕左側的圖標
+                label: const Text('單句'), // 設置按鈕文字
                 onPressed: () {
+                  // 當按鈕被按下時導航到單句頁面
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => const SingleSentencePage()),
                   );
                 },
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 10), // 添加一個高度為10的空間
               ElevatedButton.icon(
-                icon: Icon(Icons.hearing),
-                label: const Text('對話'),
+                icon: Icon(Icons.hearing), // 設置按鈕左側的圖標
+                label: const Text('對話'), // 設置按鈕文字
                 onPressed: () {
+                  // 當按鈕被按下時導航到對話頁面
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const DialoguePage()),
+                    MaterialPageRoute(builder: (context) => const DialoguePage()), // 創建導航到 DialoguePage 頁面
                   );
                 },
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 40), // 添加一個高度為40的空間，分隔不同類別
               const Text(
                 '閱讀能力',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 20), // 添加一個高度為20的空間
               ElevatedButton.icon(
-                icon: Icon(Icons.book),
-                label: const Text('閱測'),
+                icon: Icon(Icons.book), // 設置按鈕左側的圖標
+                label: const Text('閱測'), // 設置按鈕文字
                 onPressed: () {
+                  // 當按鈕被按下時導航到閱測頁面
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => const ReadingTestPage()),
@@ -70,7 +73,7 @@ class QuestionBankPage extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: const BottomNavBar(selectedIndex: 2),
+      bottomNavigationBar: const BottomNavBar(selectedIndex: 2), // 底部導航欄，跳至 “測驗區” 頁面
     );
   }
 }

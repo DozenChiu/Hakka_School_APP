@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'home_page.dart';
+import 'main.dart';
 import 'learning_area_page.dart';
 import 'question_bank_page.dart';
 import 'my_vocabulary_page.dart';
@@ -9,27 +9,28 @@ class BottomNavBar extends StatelessWidget {
 
   const BottomNavBar({super.key, required this.selectedIndex});
 
+  // 定義點擊底部導航欄項目後執行的操作
   void _onItemTapped(BuildContext context, int index) {
     switch (index) {
-      case 0:
+      case 0:// 導航到主頁面
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
+          MaterialPageRoute(builder: (context) => const MyApp()),
         );
         break;
-      case 1:
+      case 1:// 導航到學習區頁面
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const LearningAreaPage()),
         );
         break;
-      case 2:
+      case 2:// 導航到測驗區頁面
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const QuestionBankPage()),
         );
         break;
-      case 3:
+      case 3:// 導航到我的單字頁面
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const MyVocabularyPage()),
@@ -60,81 +61,11 @@ class BottomNavBar extends StatelessWidget {
         ),
       ],
       currentIndex: selectedIndex,
-      selectedItemColor: Colors.amber[800],
-      unselectedItemColor: Colors.grey, // 改变未选中状态的颜色
-      selectedLabelStyle: TextStyle(color: Colors.amber[800]), // 选中时文字颜色
-      unselectedLabelStyle: TextStyle(color: Colors.blue), // 未选中时文字颜色
-      onTap: (index) => _onItemTapped(context, index),
+      selectedItemColor: Colors.amber[800], // 已選中項目的顏色
+      unselectedItemColor: Colors.grey, // 未選中項目的顏色
+      selectedLabelStyle: TextStyle(color: Colors.amber[800]), // 已選中項目的文字顏色
+      unselectedLabelStyle: TextStyle(color: Colors.blue), // 未選中項目的文字顏色
+      onTap: (index) => _onItemTapped(context, index), // 點擊項目後調用的方法
     );
   }
-
 }
-
-
-/*import 'package:flutter/material.dart';
-import 'home_page.dart';
-import 'learning_area_page.dart';
-import 'question_bank_page.dart';
-import 'my_vocabulary_page.dart';
-
-class BottomNavBar extends StatelessWidget {
-  final int selectedIndex;
-
-  const BottomNavBar({super.key, required this.selectedIndex});
-
-  void _onItemTapped(BuildContext context, int index) {
-    switch (index) {
-      case 0:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
-        );
-        break;
-      case 1:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const LearningAreaPage()),
-        );
-        break;
-      case 2:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const QuestionBankPage()),
-        );
-        break;
-      case 3:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const MyVocabularyPage()),
-        );
-        break;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: '首頁',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.school),
-          label: '學習區',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.quiz),
-          label: '測驗區',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.book),
-          label: '我的單字',
-        ),
-      ],
-      currentIndex: selectedIndex,
-      selectedItemColor: Colors.amber[800],
-      onTap: (index) => _onItemTapped(context, index),
-    );
-  }
-}*/

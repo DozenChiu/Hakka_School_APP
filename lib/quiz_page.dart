@@ -16,17 +16,17 @@ class QuizPage extends StatelessWidget {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center, // 主軸對齊方式設置為居中
           children: <Widget>[
             const Text(
               '這是測驗區',
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 20), // 添加一個高度為20的空間
             ElevatedButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pop(context); // 當按鈕被按下時返回到上一頁
               },
-              child: const Text('返回主頁'),
+              child: const Text('返回主頁'), // 按鈕顯示的文字
             ),
           ],
         ),

@@ -23,6 +23,7 @@ class LearningAreaPage extends StatelessWidget {
           children: <Widget>[
             ElevatedButton(
               onPressed: () {
+                // 點擊按鈕後導航到詞彙表頁面
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const VocabularyPage()),
@@ -30,9 +31,10 @@ class LearningAreaPage extends StatelessWidget {
               },
               child: const Text('詞彙表'),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 20), // 添加一個高度為20的空間
             ElevatedButton(
               onPressed: () {
+                // 點擊按鈕後導航到題庫頁面
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const QuestionBankPage()),
@@ -43,7 +45,7 @@ class LearningAreaPage extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: const BottomNavBar(selectedIndex: 1),
+      bottomNavigationBar: const BottomNavBar(selectedIndex: 1), // 底部導航欄，選中學習區
     );
   }
 }

@@ -3,7 +3,7 @@ import 'learning_area_page.dart';
 import 'quiz_page.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const MyApp()); // 應用程序的入口點，運行 MyApp
 }
 
 class MyApp extends StatelessWidget {
@@ -12,12 +12,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Flutter Demo', // 設置應用程序的標題
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple), // 設置應用程序的主題色調
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Hakka_app Home Page'),
+      home: const MyHomePage(title: 'Hakka_app Home Page'), // 設置主頁面為 MyHomePage 小部件
     );
   }
 }
@@ -25,50 +25,52 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key, required this.title});
 
-  final String title;
+  final String title; // 定義頁面標題的變量
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        title: Text(title, style: TextStyle(color: Colors.white)),
-        centerTitle: true,
+        backgroundColor: Theme.of(context).colorScheme.primary, // 設置頂部背景顏色為主題的主要顏色
+        title: Text(title, style: TextStyle(color: Colors.white)), // 設置頂部標題文字和顏色
+        centerTitle: true, // 設置頂部標題居中
       ),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0), // 設置內邊距為16.0
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center, // 主軸對齊方式設置為居中
             children: <Widget>[
               const Text(
-                '歡迎來到主頁',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                '歡迎來到主頁', // 顯示歡迎文字
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),  // 設置文字大小和加粗
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 20), // 添加一個高度為20的空間
               ElevatedButton.icon(
-                icon: Icon(Icons.book),
-                label: const Text('學習區'),
+                icon: Icon(Icons.book), // 設置按鈕左側的圖標
+                label: const Text('學習區'), // 設置按鈕文字
                 style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                  textStyle: TextStyle(fontSize: 18),
+                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),  // 設置按鈕內邊距
+                  textStyle: TextStyle(fontSize: 18),  // 設置按鈕文字大小
                 ),
                 onPressed: () {
+                  // 當按鈕被按下時導航到學習區頁面
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => const LearningAreaPage()),
                   );
                 },
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 20), // 添加一個高度為20的空間
               ElevatedButton.icon(
-                icon: Icon(Icons.quiz),
-                label: const Text('測驗區'),
+                icon: Icon(Icons.quiz), // 設置按鈕左側的圖標
+                label: const Text('測驗區'), // 設置按鈕文字
                 style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                  textStyle: TextStyle(fontSize: 18),
+                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),  // 設置按鈕內邊距
+                  textStyle: TextStyle(fontSize: 18), // 設置按鈕文字大小
                 ),
                 onPressed: () {
+                  // 當按鈕被按下時導航到測驗區頁面
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => const QuizPage()),
@@ -82,271 +84,3 @@ class MyHomePage extends StatelessWidget {
     );
   }
 }
-//
-// import 'package:flutter/material.dart';
-// import 'home_page.dart';
-// import 'learning_area_page.dart';
-// import 'question_bank_page.dart';
-// import 'my_vocabulary_page.dart';
-//
-// void main() {
-//   runApp(const MyApp());
-// }
-//
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Flutter Demo',
-//       theme: ThemeData(
-//         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-//         useMaterial3: true,
-//       ),
-//       home: const MyHomePage(title: 'Hakka_app Home Page'),
-//     );
-//   }
-// }
-//
-// class MyHomePage extends StatefulWidget {
-//   const MyHomePage({super.key, required this.title});
-//
-//   final String title;
-//
-//   @override
-//   State<MyHomePage> createState() => _MyHomePageState();
-// }
-//
-// class _MyHomePageState extends State<MyHomePage> {
-//   int _selectedIndex = 0; // 设置初始值为 0，显示主页
-//
-//   static const List<Widget> _widgetOptions = <Widget>[
-//     HomePage(), // 主页
-//     LearningAreaPage(), // 学习区页面
-//     QuestionBankPage(), // 測驗區页面
-//     MyVocabularyPage(), // 我的單字页面
-//   ];
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         backgroundColor: Theme.of(context).colorScheme.primary,
-//         title: Text(widget.title, style: TextStyle(color: Colors.white)),
-//         centerTitle: true,
-//       ),
-//       body: Center(
-//         child: _widgetOptions.elementAt(_selectedIndex),
-//       ),
-//       bottomNavigationBar: BottomNavBar(
-//         selectedIndex: _selectedIndex,
-//         onItemTapped: _onItemTapped,
-//       ),
-//     );
-//   }
-//
-//   void _onItemTapped(int index) {
-//     setState(() {
-//       _selectedIndex = index;
-//     });
-//   }
-// }
-//
-// class BottomNavBar extends StatelessWidget {
-//   final int selectedIndex;
-//   final Function(int) onItemTapped;
-//
-//   const BottomNavBar({super.key, required this.selectedIndex, required this.onItemTapped});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return BottomNavigationBar(
-//       items: const <BottomNavigationBarItem>[
-//         BottomNavigationBarItem(
-//           icon: Icon(Icons.home),
-//           label: '首頁',
-//         ),
-//         BottomNavigationBarItem(
-//           icon: Icon(Icons.school),
-//           label: '學習區',
-//         ),
-//         BottomNavigationBarItem(
-//           icon: Icon(Icons.quiz),
-//           label: '測驗區',
-//         ),
-//         BottomNavigationBarItem(
-//           icon: Icon(Icons.book),
-//           label: '我的單字',
-//         ),
-//       ],
-//       currentIndex: selectedIndex,
-//       selectedItemColor: Colors.amber[800],
-//       unselectedItemColor: Colors.grey, // 改变未选中状态的颜色
-//       selectedLabelStyle: TextStyle(color: Colors.amber[800]), // 选中时文字颜色
-//       unselectedLabelStyle: TextStyle(color: Colors.grey), // 未选中时文字颜色
-//       onTap: onItemTapped,
-//     );
-//   }
-// }
-
-
-
-// class _MyHomePageState extends State<MyHomePage> {
-//   int _selectedIndex = 0;
-//
-//   static const List<Widget> _widgetOptions = <Widget>[
-//     LearningAreaPage(),
-//     QuizPage(),
-//     // 其他頁面依次添加
-//   ];
-//
-//   void _onItemTapped(int index) {
-//     setState(() {
-//       _selectedIndex = index;
-//     });
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         backgroundColor: Theme.of(context).colorScheme.primary,
-//         title: Text(widget.title, style: TextStyle(color: Colors.white)),
-//         centerTitle: true,
-//       ),
-//       body: Center(
-//         child: _widgetOptions.elementAt(_selectedIndex),
-//       ),
-//       bottomNavigationBar: BottomNavBar(selectedIndex: _selectedIndex),
-//     );
-//   }
-// }
-
-
-
-/*
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
-}
-*/
