@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
 import 'learning_area_page.dart';
-import 'question_bank_page.dart';
+import 'main.dart';
 import 'my_vocabulary_page.dart';
+import 'question_bank_page.dart';
 
 class BottomNavBar extends StatelessWidget {
   final int selectedIndex;
@@ -12,6 +12,8 @@ class BottomNavBar extends StatelessWidget {
   // 定義點擊底部導航欄項目後執行的操作
   void _onItemTapped(BuildContext context, int index) {
     switch (index) {
+      case -1: // 跟現在的頁碼相同，do nothing
+        break;
       case 0:// 導航到主頁面
         Navigator.pushReplacement(
           context,
@@ -64,8 +66,8 @@ class BottomNavBar extends StatelessWidget {
       selectedItemColor: Colors.amber[800], // 已選中項目的顏色
       unselectedItemColor: Colors.grey, // 未選中項目的顏色
       selectedLabelStyle: TextStyle(color: Colors.amber[800]), // 已選中項目的文字顏色
-      unselectedLabelStyle: TextStyle(color: Colors.blue), // 未選中項目的文字顏色
-      onTap: (index) => _onItemTapped(context, index), // 點擊項目後調用的方法
+      unselectedLabelStyle: const TextStyle(color: Colors.blue), // 未選中項目的文字顏色
+      onTap: (index) => _onItemTapped(context, index!=selectedIndex?index:-1 ), // 點擊項目後調用的方法，後面塞判斷式
     );
   }
 }
