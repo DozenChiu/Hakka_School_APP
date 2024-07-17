@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'bottom_nav_bar.dart';
-import 'single_sentence_page.dart';
 import 'dialogue_page.dart';
 import 'reading_test_page.dart';
+import 'single_sentence_page.dart';
 
 class QuestionBankPage extends StatelessWidget {
   const QuestionBankPage({super.key});
@@ -11,8 +11,6 @@ class QuestionBankPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary, // 設置頂部背景顏色為主題的主要顏色
-        //title: const Text('題庫'),
         title: const Text(
           '題庫',
           style: TextStyle(color: Colors.white), // 設置標題文字顏色為白色
@@ -30,7 +28,7 @@ class QuestionBankPage extends StatelessWidget {
               ),
               const SizedBox(height: 20), // 添加一個高度為20的空間
               ElevatedButton.icon(
-                icon: Icon(Icons.hearing), // 設置按鈕左側的圖標
+                icon: const Icon(Icons.hearing), // 設置按鈕左側的圖標
                 label: const Text('單句'), // 設置按鈕文字
                 onPressed: () {
                   // 當按鈕被按下時導航到單句頁面
@@ -42,7 +40,7 @@ class QuestionBankPage extends StatelessWidget {
               ),
               const SizedBox(height: 10), // 添加一個高度為10的空間
               ElevatedButton.icon(
-                icon: Icon(Icons.hearing), // 設置按鈕左側的圖標
+                icon: const Icon(Icons.hearing), // 設置按鈕左側的圖標
                 label: const Text('對話'), // 設置按鈕文字
                 onPressed: () {
                   // 當按鈕被按下時導航到對話頁面
@@ -59,7 +57,7 @@ class QuestionBankPage extends StatelessWidget {
               ),
               const SizedBox(height: 20), // 添加一個高度為20的空間
               ElevatedButton.icon(
-                icon: Icon(Icons.book), // 設置按鈕左側的圖標
+                icon: const Icon(Icons.book), // 設置按鈕左側的圖標
                 label: const Text('閱測'), // 設置按鈕文字
                 onPressed: () {
                   // 當按鈕被按下時導航到閱測頁面
