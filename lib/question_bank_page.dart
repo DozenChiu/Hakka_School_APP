@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'bottom_nav_bar.dart';
 import 'dialogue_page.dart';
 import 'reading_test_page.dart';
 import 'single_sentence_page.dart';
@@ -50,11 +49,13 @@ class QuestionBankPage extends StatelessWidget {
                   );
                 },
               ),
+
               const SizedBox(height: 40), // 添加一個高度為40的空間，分隔不同類別
               const Text(
                 '閱讀能力',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
+
               const SizedBox(height: 20), // 添加一個高度為20的空間
               ElevatedButton.icon(
                 icon: const Icon(Icons.book), // 設置按鈕左側的圖標
@@ -71,7 +72,6 @@ class QuestionBankPage extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: const BottomNavBar(selectedIndex: 2), // 底部導航欄，跳至 “測驗區” 頁面
     );
   }
 }
