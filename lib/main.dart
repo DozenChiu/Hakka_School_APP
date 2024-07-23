@@ -28,6 +28,11 @@ Future<void> _copyDatabaseFromAssets() async {
   final exists = await File(path).exists(); //print('Database path: $path'); print('Database exists: $exists');
 
   if (!exists) { // 資料庫文件不存在，從assets文件夾複製
+    // 檢查並創建目標目錄
+    final directory = Directory(dbPath);
+    if (!await directory.exists()) {
+      await directory.create(recursive: true);
+    }
     try {
       final data = await rootBundle.load('assets/Quiz.db');
       final bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
