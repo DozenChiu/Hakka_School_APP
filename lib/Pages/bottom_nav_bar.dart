@@ -14,25 +14,25 @@ class BottomNavBar extends StatelessWidget {
     switch (index) {
       case -1: // 跟現在的頁碼相同，do nothing
         break;
-      case 0:// 導航到主頁面
+      case 0: // 導航到主頁面
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const MyApp()),
         );
         break;
-      case 1:// 導航到學習區頁面
+      case 1: // 導航到學習區頁面
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const LearningAreaPage()),
         );
         break;
-      case 2:// 導航到測驗區頁面
+      case 2: // 導航到測驗區頁面
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const TestPage()),
+          MaterialPageRoute(builder: (context) => const QuizPage()),
         );
         break;
-      case 3:// 導航到我的單字頁面
+      case 3: // 導航到我的單字頁面
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const MyVocabularyPage()),
@@ -67,7 +67,8 @@ class BottomNavBar extends StatelessWidget {
       unselectedItemColor: Colors.grey, // 未選中項目的顏色
       selectedLabelStyle: TextStyle(color: Colors.amber[800]), // 已選中項目的文字顏色
       unselectedLabelStyle: const TextStyle(color: Colors.blue), // 未選中項目的文字顏色
-      onTap: (index) => _onItemTapped(context, index!=selectedIndex?index:-1 ), // 點擊項目後調用的方法，後面塞判斷式
+      onTap: (index) => _onItemTapped(
+          context, index != selectedIndex ? index : -1), // 點擊項目後調用的方法，後面塞判斷式
     );
   }
 }

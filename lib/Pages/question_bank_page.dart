@@ -33,7 +33,8 @@ class QuestionBankPage extends StatelessWidget {
                   // 當按鈕被按下時導航到單句頁面
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const SingleSentencePage()),
+                    MaterialPageRoute(
+                        builder: (context) => const SingleSentencePage()),
                   );
                 },
               ),
@@ -45,15 +46,19 @@ class QuestionBankPage extends StatelessWidget {
                   // 當按鈕被按下時導航到對話頁面
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const DialoguePage()), // 創建導航到 DialoguePage 頁面
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            const DialoguePage()), // 創建導航到 DialoguePage 頁面
                   );
                 },
               ),
+
               const SizedBox(height: 40), // 添加一個高度為40的空間，分隔不同類別
               const Text(
                 '閱讀能力',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
+
               const SizedBox(height: 20), // 添加一個高度為20的空間
               ElevatedButton.icon(
                 icon: const Icon(Icons.book), // 設置按鈕左側的圖標
@@ -62,7 +67,8 @@ class QuestionBankPage extends StatelessWidget {
                   // 當按鈕被按下時導航到閱測頁面
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const ReadingTestPage()),
+                    MaterialPageRoute(
+                        builder: (context) => const ReadingTestPage()),
                   );
                 },
               ),
