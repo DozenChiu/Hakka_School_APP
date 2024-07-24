@@ -64,9 +64,6 @@ flutter:
     - assets/Quiz.db
     - assets/Picture/  # 添加這一行以便 Flutter 知道要載入這個目錄中的所有圖片
   # To add assets to your application, add an assets section, like this:
-  assets:
-     - assets/Quiz.db
-  #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
