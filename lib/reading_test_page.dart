@@ -7,7 +7,8 @@ class ReadingTestPage extends StatelessWidget {
 
   Future<List<Map<String, dynamic>>> _fetchReadings() async {
     final dbPath = await databaseFactory.getDatabasesPath();
-    final path = join(dbPath, 'Quiz.db'); // print('Database path: $path');
+    final path = join(dbPath, 'Quiz.db');
+    print('Database path: $path');
     final db = await databaseFactory.openDatabase(path);
     return await db.query('Reading', orderBy: 'No');
   }

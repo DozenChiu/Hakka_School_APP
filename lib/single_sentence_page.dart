@@ -8,7 +8,8 @@ class SingleSentencePage extends StatelessWidget {
 
   Future<List<Map<String, dynamic>>> _fetchListenings() async {
     final dbPath = await databaseFactory.getDatabasesPath();
-    final path = join(dbPath, 'Quiz.db');  // print('Database path: $path');
+    final path = join(dbPath, 'Quiz.db');
+    print('Database path: $path');
     final db = await databaseFactory.openDatabase(path);
     return await db.query('Listen_1', orderBy: 'No');
   }
@@ -125,7 +126,7 @@ class SingleSentencePage extends StatelessWidget {
                                           )
                                         else
                                           Text(
-                                            '1. ${listening['Option_1'] ?? 'N/A'}', // 顯示選項編號
+                                            '1. ${listening['Option_1'] ?? 'N/A'}', // **顯示選項編號**
                                             textAlign: TextAlign.center,
                                           ),
                                       ],
@@ -147,7 +148,7 @@ class SingleSentencePage extends StatelessWidget {
                                           )
                                         else
                                           Text(
-                                            '2. ${listening['Option_2'] ?? 'N/A'}', // 顯示選項編號
+                                            '2. ${listening['Option_2'] ?? 'N/A'}', // **顯示選項編號**
                                             textAlign: TextAlign.center,
                                           ),
                                       ],
@@ -169,7 +170,7 @@ class SingleSentencePage extends StatelessWidget {
                                           )
                                         else
                                           Text(
-                                            '3. ${listening['Option_3'] ?? 'N/A'}', // 顯示選項編號
+                                            '3. ${listening['Option_3'] ?? 'N/A'}', // **顯示選項編號**
                                             textAlign: TextAlign.center,
                                           ),
                                       ],

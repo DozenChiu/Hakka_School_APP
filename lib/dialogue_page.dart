@@ -9,7 +9,7 @@ class DialoguePage extends StatelessWidget {
   Future<List<Map<String, dynamic>>> _fetchDialogues() async {
     final dbPath = await databaseFactory.getDatabasesPath();
     final path = join(dbPath, 'Quiz.db');
-    // print('Database path: $path');
+    print('Database path: $path');
     final db = await databaseFactory.openDatabase(path);
     return await db.query('Listen_2', orderBy: 'No');
   }

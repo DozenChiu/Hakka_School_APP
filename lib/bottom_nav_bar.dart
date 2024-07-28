@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'learning_area_page.dart';
+import 'question_bank_page.dart';
 import 'main.dart';
 import 'my_vocabulary_page.dart';
 import 'quiz_page.dart';
@@ -20,16 +20,16 @@ class BottomNavBar extends StatelessWidget {
           MaterialPageRoute(builder: (context) => const MyApp()),
         );
         break;
-      case 1:// 導航到學習區頁面
+      case 1:// 導航到題庫區頁面
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const LearningAreaPage()),
+          MaterialPageRoute(builder: (context) => const QuestionBankPage()),
         );
         break;
       case 2:// 導航到測驗區頁面
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const QuizPage()),
+          MaterialPageRoute(builder: (context) => QuizPage()),
         );
         break;
       case 3:// 導航到我的單字頁面
