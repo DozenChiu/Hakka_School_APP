@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
+import 'package:provider/provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'dart:io';
+
+import '../Services/audioProvider.dart';
 
 class DialoguePage extends StatelessWidget {
   const DialoguePage({super.key});
@@ -29,8 +32,16 @@ class DialoguePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final audioPlayerProvider = Provider.of<AudioProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            audioPlayerProvider.stopAudio();
+            Navigator.pop(context);
+          },
+        ),
         title: const Text(
           '對話',
           style: TextStyle(color: Colors.white),
@@ -51,7 +62,6 @@ class DialoguePage extends StatelessWidget {
             itemBuilder: (context, index) {
               final dialogue = dialogues[index];
               final no = dialogue['No'] as int;
-              final hasPic = dialogue['HasPic'] as int;
 
               final option1ImagePath = _getImagePath(no, 1);
               final option2ImagePath = _getImagePath(no, 2);
@@ -83,12 +93,18 @@ class DialoguePage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // 題號
-                          Text(
-                            'No: $no',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          Row (
+                              children: [
+                                Text('No: $no',
+                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,),
+                                ),
+                                IconButton(
+                                    icon: const Icon(Icons.volume_up_rounded),
+                                    onPressed: () {
+                                      audioPlayerProvider.playAudio('Listen_2', '02_${no.toString()}');
+                                    }
+                                ),
+                              ]
                           ),
                           SizedBox(height: 8),
 

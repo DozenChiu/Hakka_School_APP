@@ -23,7 +23,12 @@ samples, guidance on mobile development, and a full API reference.
 ## 目標
 - 還原當初 App 功能
 - UI 改好看
-- 音檔分次下載
+
+## 資料夾
+- assets: 放資料庫、圖片等等資源
+- lib
+ - Pages: 放前端
+ - Services: 放後端初始化
 
 ## 設計簡報連結
 - [Canva](https://www.canva.com/design/DAGKgf-VYWs/sgUgDu1Kyia07Vm_HFlXSQ/edit?utm_content=DAGKgf-VYWs&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)

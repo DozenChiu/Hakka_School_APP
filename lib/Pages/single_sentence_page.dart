@@ -1,11 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
+import 'package:provider/provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'dart:io';
+import '../Services/audioProvider.dart';
 
 class SingleSentencePage extends StatelessWidget {
-  const SingleSentencePage({super.key});
-
+  SingleSentencePage({super.key});
   Future<List<Map<String, dynamic>>> _fetchListenings() async {
     final dbPath = await databaseFactory.getDatabasesPath();
     final path = join(dbPath, 'Quiz.db'); // print('Database path: $path');
@@ -28,8 +30,16 @@ class SingleSentencePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final audioPlayerProvider = Provider.of<AudioProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            audioPlayerProvider.stopAudio();
+            Navigator.pop(context);
+          },
+        ),
         title: const Text(
           '單句',
           style: TextStyle(color: Colors.white),
@@ -50,7 +60,6 @@ class SingleSentencePage extends StatelessWidget {
             itemBuilder: (context, index) {
               final listening = listenings[index];
               final no = listening['No'] as int;
-              final hasPic = listening['HasPic'] as int;
 
               final option1ImagePath = _getImagePath(no, 1);
               final option2ImagePath = _getImagePath(no, 2);
@@ -82,15 +91,21 @@ class SingleSentencePage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // 題號
-                          Text(
-                            'No: $no',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          Row (
+                            children: [
+                              Text('No: $no',
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.volume_up_rounded),
+                                onPressed: () {
+                                  audioPlayerProvider.playAudio('Listen_1', '01_${no.toString()}');
+                                }
+                              ),
+                            ]
                           ),
-                          SizedBox(height: 8),
 
+                          SizedBox(height: 8),
                           // 題目圖片或文字
                           if (hasQuestionPic)
                             SizedBox(

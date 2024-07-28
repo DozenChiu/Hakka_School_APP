@@ -35,9 +35,15 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
+  # 資料庫的 package
   sqflite: ^2.3.3+1
   sqflite_common_ffi: ^2.3.3
   path: ^1.9.0
+  # audio 的 package
+  url_launcher: ^6.3.0
+  audioplayers: ^6.0.0
+  # page 改變的 package
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:
@@ -61,7 +67,9 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-    - assets/Quiz.db
+    - assets/Quiz2.db
+    - assets/Sound/Lis_01/
+    - assets/Sound/Lis_02/
     - assets/Picture/  # 添加這一行以便 Flutter 知道要載入這個目錄中的所有圖片
   # To add assets to your application, add an assets section, like this:
 
