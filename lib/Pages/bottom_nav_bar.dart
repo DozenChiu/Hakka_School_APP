@@ -29,7 +29,7 @@ class BottomNavBar extends StatelessWidget {
       case 2: // 導航到測驗區頁面
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const QuizPage()),
+          MaterialPageRoute(builder: (context) => QuizPage()),
         );
         break;
       case 3: // 導航到我的單字頁面

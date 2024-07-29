@@ -3,7 +3,6 @@ import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'dart:io';
-
 import '../Services/audioProvider.dart';
 
 class DialoguePage extends StatelessWidget {
@@ -32,7 +31,8 @@ class DialoguePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final audioPlayerProvider = Provider.of<AudioProvider>(context, listen: false);
+    final audioPlayerProvider =
+        Provider.of<AudioProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -93,19 +93,21 @@ class DialoguePage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // 題號
-                          Row (
-                              children: [
-                                Text('No: $no',
-                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,),
-                                ),
-                                IconButton(
-                                    icon: const Icon(Icons.volume_up_rounded),
-                                    onPressed: () {
-                                      audioPlayerProvider.playAudio('Listen_2', '02_${no.toString()}');
-                                    }
-                                ),
-                              ]
-                          ),
+                          Row(children: [
+                            Text(
+                              'No: $no',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            IconButton(
+                                icon: const Icon(Icons.volume_up_rounded),
+                                onPressed: () {
+                                  audioPlayerProvider.playAudio(
+                                      'Listen_2', '02_${no.toString()}');
+                                }),
+                          ]),
                           SizedBox(height: 8),
 
                           // 題目圖片或文字

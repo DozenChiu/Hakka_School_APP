@@ -30,7 +30,8 @@ class SingleSentencePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final audioPlayerProvider = Provider.of<AudioProvider>(context, listen: false);
+    final audioPlayerProvider =
+        Provider.of<AudioProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -91,19 +92,21 @@ class SingleSentencePage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // 題號
-                          Row (
-                            children: [
-                              Text('No: $no',
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,),
+                          Row(children: [
+                            Text(
+                              'No: $no',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
                               ),
-                              IconButton(
+                            ),
+                            IconButton(
                                 icon: const Icon(Icons.volume_up_rounded),
                                 onPressed: () {
-                                  audioPlayerProvider.playAudio('Listen_1', '01_${no.toString()}');
-                                }
-                              ),
-                            ]
-                          ),
+                                  audioPlayerProvider.playAudio(
+                                      'Listen_1', '01_${no.toString()}');
+                                }),
+                          ]),
 
                           SizedBox(height: 8),
                           // 題目圖片或文字
