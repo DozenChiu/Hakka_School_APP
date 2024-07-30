@@ -255,19 +255,24 @@ class _QuizPageState extends State<QuizPage> {
                                 },
                                 child: Column(
                                   children: [
-                                    // 如果選項1有圖片
-                                    if (hasOption1Pic)
-                                      Image.asset(
-                                        _getImagePath(question['Table_Name'], question['No'], 1),
-                                        width: 80,
-                                        height: 80,
-                                        fit: BoxFit.contain,
-                                      )
-                                    else
-                                      Text(
-                                        '1. ${question['Option_1']}',
-                                        textAlign: TextAlign.center,
-                                      ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text('1. '),
+                                        if (hasOption1Pic)
+                                          Image.asset(
+                                            _getImagePath(question['Table_Name'], question['No'], 1),
+                                            width: 80,
+                                            height: 80,
+                                            fit: BoxFit.contain,
+                                          )
+                                        else
+                                          Text(
+                                            ' ${question['Option_1']}',
+                                            textAlign: TextAlign.center,
+                                          ),
+                                      ],
+                                    ),
                                   ],
                                 ),
                                 style: ElevatedButton.styleFrom(
@@ -287,19 +292,24 @@ class _QuizPageState extends State<QuizPage> {
                                 },
                                 child: Column(
                                   children: [
-                                    // 如果選項2有圖片
-                                    if (hasOption2Pic)
-                                      Image.asset(
-                                        _getImagePath(question['Table_Name'], question['No'], 2),
-                                        width: 80,
-                                        height: 80,
-                                        fit: BoxFit.contain,
-                                      )
-                                    else
-                                      Text(
-                                        '2. ${question['Option_2']}',
-                                        textAlign: TextAlign.center,
-                                      ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text('2. '),
+                                        if (hasOption2Pic)
+                                          Image.asset(
+                                            _getImagePath(question['Table_Name'], question['No'], 2),
+                                            width: 80,
+                                            height: 80,
+                                            fit: BoxFit.contain,
+                                          )
+                                        else
+                                          Text(
+                                            ' ${question['Option_2']}',
+                                            textAlign: TextAlign.center,
+                                          ),
+                                      ],
+                                    ),
                                   ],
                                 ),
                                 style: ElevatedButton.styleFrom(
@@ -319,19 +329,24 @@ class _QuizPageState extends State<QuizPage> {
                                 },
                                 child: Column(
                                   children: [
-                                    // 如果選項3有圖片
-                                    if (hasOption3Pic)
-                                      Image.asset(
-                                        _getImagePath(question['Table_Name'], question['No'], 3),
-                                        width: 80,
-                                        height: 80,
-                                        fit: BoxFit.contain,
-                                      )
-                                    else
-                                      Text(
-                                        '3. ${question['Option_3']}',
-                                        textAlign: TextAlign.center,
-                                      ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text('3. '),
+                                        if (hasOption3Pic)
+                                          Image.asset(
+                                            _getImagePath(question['Table_Name'], question['No'], 3),
+                                            width: 80,
+                                            height: 80,
+                                            fit: BoxFit.contain,
+                                          )
+                                        else
+                                          Text(
+                                            ' ${question['Option_3']}',
+                                            textAlign: TextAlign.center,
+                                          ),
+                                      ],
+                                    ),
                                   ],
                                 ),
                                 style: ElevatedButton.styleFrom(
@@ -352,10 +367,6 @@ class _QuizPageState extends State<QuizPage> {
         },
       ),
       bottomNavigationBar: const BottomNavBar(selectedIndex: 2), // 底部導航欄
-      /*floatingActionButton: FloatingActionButton(
-        onPressed: _submitAnswers,
-        child: Icon(Icons.check),
-      ),*/
       floatingActionButton: FloatingActionButton(
         onPressed: _submitAnswers,
         child: Center(
