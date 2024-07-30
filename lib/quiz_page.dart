@@ -23,7 +23,10 @@ class _QuizPageState extends State<QuizPage> {
   void initState() { // 一開始進入頁面要做的事
     super.initState();
     _initializeDatabase();
-    _startTimer(); // 開始倒數計時
+    //_startTimer(); // 開始倒數計時
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      _showStartDialog(); // 顯示開始對話框
+    });
   }
 
   @override
@@ -140,6 +143,25 @@ class _QuizPageState extends State<QuizPage> {
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (context) => QuizRecordPage()),
               );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _showStartDialog() async {
+    await showDialog(
+      context: this.context,
+      builder: (context) => AlertDialog(
+        title: Text('測驗開始'),
+        content: Text('此測驗需15分鐘，按下確定後開始計時。'),
+        actions: <Widget>[
+          TextButton(
+            child: Text('確定'),
+            onPressed: () {
+              Navigator.of(context).pop();
+              _startTimer(); // 開始倒數計時
             },
           ),
         ],
