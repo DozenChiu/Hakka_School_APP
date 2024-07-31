@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
-import 'package:provider/provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'dart:io';
 import '../Services/audioProvider.dart';
@@ -30,8 +29,7 @@ class SingleSentencePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final audioPlayerProvider =
-        Provider.of<AudioProvider>(context, listen: false);
+    final audioPlayerProvider = AudioProvider();
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -92,7 +90,8 @@ class SingleSentencePage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // 題號
-                          Row(children: [
+                          Row(
+                          children: [
                             Text(
                               'No: $no',
                               style: TextStyle(
@@ -126,12 +125,11 @@ class SingleSentencePage extends StatelessWidget {
 
                           // 選項圖片或文字
                           Row(
+                            mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               if (listening['Option_1'] != null)
                                 Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: () {},
                                     child: Column(
                                       children: [
                                         if (hasOption1Pic)
@@ -148,7 +146,6 @@ class SingleSentencePage extends StatelessWidget {
                                           ),
                                       ],
                                     ),
-                                  ),
                                 ),
                               if (listening['Option_2'] != null)
                                 Expanded(

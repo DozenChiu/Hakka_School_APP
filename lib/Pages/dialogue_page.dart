@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
-import 'package:provider/provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'dart:io';
 import '../Services/audioProvider.dart';
@@ -31,8 +30,7 @@ class DialoguePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final audioPlayerProvider =
-        Provider.of<AudioProvider>(context, listen: false);
+    final audioPlayerProvider = AudioProvider();
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(

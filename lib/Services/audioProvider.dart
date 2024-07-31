@@ -1,7 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter/cupertino.dart';
 
-class AudioProvider with ChangeNotifier{
+class AudioProvider {
   final _player = AudioPlayer();
   bool isPlaying = false;
 
@@ -13,14 +12,12 @@ class AudioProvider with ChangeNotifier{
     }
     await _player.play(AssetSource(path));
     isPlaying = true;
-    notifyListeners();
   }
 
   void stopAudio() {
     if (isPlaying) {
       _player.stop();
       isPlaying = false;
-      notifyListeners();
     }
   }
 }

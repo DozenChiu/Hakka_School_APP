@@ -1,7 +1,7 @@
+import 'package:Hakka_School/Pages/learning_progress_page.dart';
 import 'package:Hakka_School/Pages/question_bank_page.dart';
 import 'package:flutter/material.dart';
 import 'main.dart';
-import 'my_vocabulary_page.dart';
 import 'quiz_page.dart';
 
 class BottomNavBar extends StatelessWidget {
@@ -32,12 +32,11 @@ class BottomNavBar extends StatelessWidget {
           MaterialPageRoute(builder: (context) => QuizPage()),
         );
         break;
-      case 3: // 導航到我的單字頁面
+      case 3:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const MyVocabularyPage()),
+          MaterialPageRoute(builder: (context) => LearningProgressPage()),
         );
-        break;
     }
   }
 
@@ -58,15 +57,13 @@ class BottomNavBar extends StatelessWidget {
           label: '測驗區',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.book),
-          label: '我的單字',
-        ),
+          icon: Icon(Icons.analytics_outlined),
+          label: '進度追蹤',
+        )
       ],
       currentIndex: selectedIndex,
       selectedItemColor: Colors.amber[800], // 已選中項目的顏色
       unselectedItemColor: Colors.grey, // 未選中項目的顏色
-      selectedLabelStyle: TextStyle(color: Colors.amber[800]), // 已選中項目的文字顏色
-      unselectedLabelStyle: const TextStyle(color: Colors.blue), // 未選中項目的文字顏色
       onTap: (index) => _onItemTapped(
           context, index != selectedIndex ? index : -1), // 點擊項目後調用的方法，後面塞判斷式
     );

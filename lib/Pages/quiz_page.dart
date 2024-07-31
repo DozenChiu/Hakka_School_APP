@@ -100,6 +100,15 @@ class _QuizPageState extends State<QuizPage> {
       // 計算正確題數
       if (userAnswer == correctAnswer) {
         correctAnswers++;
+        final int id = question['No'];
+        Map<String, int> mp = {
+          'HasCorrected': 1
+        };
+        await _database.update(
+          question['Table_Name'],
+          mp,
+          where: 'No == $id and HasCorrected != 1'
+          );
       } else {
         // 答錯的情況，將題目寫入 quiz_error 資料表中
         await _database.insert('quiz_error', {

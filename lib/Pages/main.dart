@@ -1,13 +1,14 @@
-import 'package:Hakka_School/Pages/question_bank_page.dart';
+import 'package:Hakka_School/Pages/my_favorite.dart';
+import 'package:Hakka_School/Pages/quiz_records_page.dart';
+import 'package:Hakka_School/Theme/light_mode.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-import '../Services/audioProvider.dart';
 import 'bottom_nav_bar.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
+import 'incorrect_questions_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,10 +20,43 @@ void main() async {
 
   final dbPath = await databaseFactory.getDatabasesPath();
   final path = join(dbPath, 'Quiz.db');
-  final db = await databaseFactory.openDatabase(path);
+  final database = await databaseFactory.openDatabase(path);
 
-
+  // 初始化資料庫表格
+  await _createDatabaseTables(database);
   runApp(const MyApp()); // 應用程序的入口點，運行 MyApp
+}
+
+Future<void> _createDatabaseTables(Database database) async {
+  // 建立 quiz_record 表，用來記錄每次測驗題目和選項
+  await database.execute('''
+    CREATE TABLE IF NOT EXISTS quiz_record (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      table_name TEXT,
+      question_id INTEGER,
+      user_answer INTEGER,
+      correct_answer INTEGER,
+      Test_id INTEGER
+    )
+  ''');
+  // 建立 quiz_error 表，用來記錄每次測驗的錯誤題目
+  await database.execute('''
+    CREATE TABLE IF NOT EXISTS quiz_error (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      table_name TEXT,
+      question_id INTEGER,
+      user_answer INTEGER,
+      correct_answer INTEGER
+    )
+  ''');
+  // 建立 quiz_score 表，用來記錄每次測驗的成績
+  await database.execute('''
+    CREATE TABLE IF NOT EXISTS quiz_score (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      score REAL,
+      timestamp TEXT
+    )
+  ''');
 }
 
 Future<void> _copyDatabaseFromAssets() async {
@@ -41,7 +75,7 @@ Future<void> _copyDatabaseFromAssets() async {
       await directory.create(recursive: true);
     }
     try {
-      final data = await rootBundle.load('assets/Quiz2.db');
+      final data = await rootBundle.load('assets/Quiz.db');
       final bytes =
           data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
       await File(path).writeAsBytes(bytes, flush: true);
@@ -58,20 +92,12 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (_) => AudioProvider(),
-        child: MaterialApp(
+    return MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Flutter Demo', // 設置應用程序的標題
-        theme: ThemeData(
-        colorScheme:
-        ColorScheme.fromSeed(seedColor: Colors.grey.shade200), // 設置應用程序的主題色調
-        appBarTheme: const AppBarTheme(color: Colors.blue), // 設置頂部背景顏色為藍色
-        useMaterial3: true,
-      ),
-      home: MyHomePage(), // 設置主頁面為 MyHomePage 小部件
-    )
-    );
-
+        theme: lightMode,
+        home: MyHomePage(), // 設置主頁面為 MyHomePage 小部件
+      );
   }
 }
 
@@ -90,7 +116,7 @@ class MyHomePage extends StatelessWidget {
       ),
       body:  Center(
         child: Padding(
-          padding: EdgeInsets.all(16.0), // 設置內邊距為16.0
+          padding: const EdgeInsets.all(16.0), // 設置內邊距為16.0
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center, // 主軸對齊方式設置為居中
             children: <Widget>[
@@ -101,10 +127,40 @@ class MyHomePage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               ElevatedButton.icon(
-                  label: const Text("關於"),
+                label: const Text('查看測驗紀錄'),
+                onPressed: () {
+                Navigator.push(
+                context,
+              MaterialPageRoute(builder: (context) => QuizRecordPage()),
+                );
+                },
+              ),
+              const SizedBox(height: 20), // 添加一個高度為20的空間
+              ElevatedButton.icon(
+                label: const Text('查看錯誤題目'),
+                onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const IncorrectQuestionsPage()),
+                  );
+                },
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton.icon(
+                  label: const Text("我的題目"),
                   onPressed: (){
-                  showAlertDialog(context);
-              }
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const MyFavorite()),
+                    );
+                  }
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton.icon(
+                  label: const Text("關於"),
+                    onPressed: (){
+                    showAlertDialog(context);
+                  }
               ),
             ],
           ),
