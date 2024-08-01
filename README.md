@@ -23,6 +23,12 @@ samples, guidance on mobile development, and a full API reference.
 ## 目標
 - UI 改好看
 
+## 新增資料表
+
+- **quiz_error** 表：用來記錄錯誤題目，並且在 `incorrect_questions_page.dart` 頁面中顯示。
+- **quiz_record** 表：用來記錄測驗紀錄。
+- **quiz_score** 表：用來記錄成績以及測驗時間。
+
 ## 資料夾
 - assets: 放資料庫、圖片等等資源
 - lib

@@ -100,11 +100,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo', // 設置應用程序的標題
-        theme: lightMode,
-        home: MyHomePage(), // 設置主頁面為 MyHomePage 小部件
-      );
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo', // 設置應用程序的標題
+      theme: lightMode,
+      home: MyHomePage(), // 設置主頁面為 MyHomePage 小部件
+    );
   }
 }
 
@@ -121,7 +121,7 @@ class MyHomePage extends StatelessWidget {
           style: TextStyle(color: Colors.white), // 設置標題文字顏色為白色
         ),
       ),
-      body:  Center(
+      body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0), // 設置內邊距為16.0
           child: Column(
@@ -136,39 +136,39 @@ class MyHomePage extends StatelessWidget {
               ElevatedButton.icon(
                 label: const Text('查看測驗紀錄'),
                 onPressed: () {
-                Navigator.push(
-                context,
-              MaterialPageRoute(builder: (context) => QuizRecordPage()),
-                );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => QuizRecordPage()),
+                  );
                 },
               ),
               const SizedBox(height: 20), // 添加一個高度為20的空間
               ElevatedButton.icon(
                 label: const Text('查看錯誤題目'),
                 onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const IncorrectQuestionsPage()),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const IncorrectQuestionsPage()),
                   );
                 },
               ),
               const SizedBox(height: 20),
               ElevatedButton.icon(
                   label: const Text("我的題目"),
-                  onPressed: (){
+                  onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const MyFavorite()),
+                      MaterialPageRoute(
+                          builder: (context) => const MyFavorite()),
                     );
-                  }
-              ),
+                  }),
               const SizedBox(height: 20),
               ElevatedButton.icon(
                   label: const Text("關於"),
-                    onPressed: (){
+                  onPressed: () {
                     showAlertDialog(context);
-                  }
-              ),
+                  }),
             ],
           ),
         ),
@@ -176,6 +176,7 @@ class MyHomePage extends StatelessWidget {
       bottomNavigationBar: const BottomNavBar(selectedIndex: 0), // 底部導航欄
     );
   }
+
   Future<void> showAlertDialog(BuildContext context) {
     return showDialog<void>(
       context: context,
@@ -187,7 +188,8 @@ class MyHomePage extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               InkWell(
-                onTap: () => launchUrlString('https://hakkaexam.hakka.gov.tw/hakka/'),
+                onTap: () =>
+                    launchUrlString('https://hakkaexam.hakka.gov.tw/hakka/'),
                 child: const Text(
                   '報名考試',
                   style: TextStyle(
@@ -225,4 +227,3 @@ class MyHomePage extends StatelessWidget {
     );
   }
 }
-

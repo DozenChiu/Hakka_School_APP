@@ -9,10 +9,9 @@ class MyFavorite extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
           title: const Text(
-            '我的題目',
-            style: TextStyle(color: Colors.white),
-          )
-      ),
+        '我的題目',
+        style: TextStyle(color: Colors.white),
+      )),
       body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -22,6 +21,5 @@ class MyFavorite extends StatelessWidget {
         ),
       ),
     );
-
   }
 }
