@@ -9,7 +9,7 @@ class MyFavorite extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
           title: const Text(
-            '答題進度',
+            '我的題目',
             style: TextStyle(color: Colors.white),
           )
       ),

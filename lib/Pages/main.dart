@@ -57,6 +57,13 @@ Future<void> _createDatabaseTables(Database database) async {
       timestamp TEXT
     )
   ''');
+  await database.execute('''
+    CREATE TABLE IF NOT EXISTS favorite (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT,
+      No INTEGER
+    )
+  ''');
 }
 
 Future<void> _copyDatabaseFromAssets() async {
