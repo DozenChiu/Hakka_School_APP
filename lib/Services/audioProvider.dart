@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:audioplayers/audioplayers.dart';
 
 class AudioProvider {
@@ -20,4 +22,23 @@ class AudioProvider {
       isPlaying = false;
     }
   }
+}
+
+class ImgProvider {
+  String getImagePath(String table, int no, int option) {
+    if (table == "Reading") return "";
+    table = table=="Listen_1" ? "listen1" : "listen2";
+    String path = 'assets/Picture/${table}_${no}_$option.png';
+    return path;
+  }
+/*
+  Future<bool> imageExists(String path) async {
+    try {
+      final file = File(path);
+      return await file.exists();
+    } catch (e) {
+      return false;
+    }
+  }
+ */
 }

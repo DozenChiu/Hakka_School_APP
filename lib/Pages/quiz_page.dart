@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-// import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:path/path.dart';
 import 'bottom_nav_bar.dart';
@@ -103,6 +102,15 @@ class _QuizPageState extends State<QuizPage> {
       if (userAnswer == correctAnswer) {
         // 比對答案，判斷是否正確
         correctAnswers++;
+        final int id = question['No'];
+        Map<String, int> mp = {
+          'HasCorrected': 1
+        };
+        await _database.update(
+            question['Table_Name'],
+            mp,
+            where: 'No == $id and HasCorrected != 1'
+        );
       } else {
         // 如果有錯則寫進資料庫 quiz_error，其內容之後顯示於錯誤題目頁面
         await _database.insert('quiz_error', {

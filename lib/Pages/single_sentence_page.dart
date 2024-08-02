@@ -1,3 +1,4 @@
+import 'package:Hakka_School/Services/database_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
@@ -6,7 +7,7 @@ import 'dart:io';
 import '../Services/audioProvider.dart';
 
 class SingleSentencePage extends StatelessWidget {
-  SingleSentencePage({super.key});
+  const SingleSentencePage({super.key});
   Future<List<Map<String, dynamic>>> _fetchListenings() async {
     final dbPath = await databaseFactory.getDatabasesPath();
     final path = join(dbPath, 'Quiz.db'); // print('Database path: $path');
@@ -30,6 +31,7 @@ class SingleSentencePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final audioPlayerProvider = AudioProvider();
+    final dbHelper = DatabaseHelper();
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -105,6 +107,12 @@ class SingleSentencePage extends StatelessWidget {
                                   audioPlayerProvider.playAudio(
                                       'Listen_1', '01_${no.toString()}');
                                 }),
+                              IconButton(
+                              icon: const Icon(Icons.star_border),
+                              onPressed: (){
+                                dbHelper.insertFavorite('Listen_1', no);
+                              },
+                            )
                           ]),
 
                           SizedBox(height: 8),

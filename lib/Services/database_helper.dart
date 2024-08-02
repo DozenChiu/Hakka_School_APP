@@ -21,38 +21,65 @@ class DatabaseHelper {
     return await openDatabase(path, version: 1);
   }
 
-// 計算題數
-  Future<List<Test>?> getQuestionCount() async {
+// 計算答題狀況
+  Future<List<Progress>?> getQuestionCount() async {
     final db = await database;
-    final data = await db.rawQuery(
-        ''' 
+    final data = await db.rawQuery('''
         SELECT 'Listen_1' AS table_name, COUNT(*) AS ttl, SUM(CASE WHEN HasCorrected==1 THEN 1 ELSE 0 END) AS correct FROM Listen_1
         UNION ALL
         SELECT 'Listen_2' AS table_name, COUNT(*) AS ttl, SUM(CASE WHEN HasCorrected==1 THEN 1 ELSE 0 END) AS correct FROM Listen_2
         UNION ALL
         SELECT 'Reading' AS table_name, COUNT(*) AS ttl, SUM(CASE WHEN HasCorrected==1 THEN 1 ELSE 0 END) AS correct FROM Reading;
         ''');
-    List<Test> test = data.map(
+    List<Progress> p = data.map(
             (e) =>
-            Test(
+                Progress(
                 table: e['table_name'] as String,
                 ttl: e['ttl'] as int,
                 correct: e['correct'] as int
             )
     ).toList();
-    return test;
+    return p;
+  }
+
+  // favorite 插入
+  Future<void> insertFavorite(String table, int no) async {
+    final db = await database;
+    List<String> col = ['no'];
+
+    var  pair = await db.query('favorite', columns: col, where: 'no==$no');
+    List<Like> pairTo = pair.map(
+        (e)=> Like(
+        num: e['no'] as int?,
+          table: e['name'] as String?
+         )
+    ).toList();
+    if (pairTo.isNotEmpty){
+      return;
+    }
+
+    await db.insert('favorite',
+        {'name': table, 'no': no
+        });
   }
 
 }
-class Test {
+// 答對的資料型態
+class Progress {
   final int ttl;
   final int correct;
   final String table;
-  Test(
+  Progress(
       {
         required this.ttl,
         required this.table,
         required this.correct
       }
-      );
+  );
+}
+// favorite 的資料型態
+class Like {
+  final int? num;
+  final String? table;
+  Like ({required this.table, required this.num});
 }

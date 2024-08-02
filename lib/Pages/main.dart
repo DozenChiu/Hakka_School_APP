@@ -57,6 +57,7 @@ Future<void> _createDatabaseTables(Database database) async {
       timestamp TEXT
     )
   ''');
+  // 建立 favorite 表，紀錄我的題目
   await database.execute('''
     CREATE TABLE IF NOT EXISTS favorite (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -160,7 +161,7 @@ class MyHomePage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const MyFavorite()),
+                          builder: (context) => MyFavorite()),
                     );
                   }),
               const SizedBox(height: 20),

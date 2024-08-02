@@ -16,7 +16,7 @@ class LearningProgressPage extends StatelessWidget {
         style: TextStyle(color: Colors.white),
       )),
       body: Center(
-        child: FutureBuilder<List<Test>?>(
+        child: FutureBuilder<List<Progress>?>(
           future: dbHelper.getQuestionCount(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -27,46 +27,61 @@ class LearningProgressPage extends StatelessWidget {
               return const Text('No data found');
             } else {
               final list = snapshot.data!;
-              final result = (list[0].correct / list[0].ttl) * 100;
-
-              /// 顯示%數的正確方法?
+              List<double> result = [0,0,0]; // 計算每種測驗的進度
+              for (int i=0; i<3; i++) {
+                result[i] = list[i].correct / list[1].ttl;
+              }
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('單句測驗進度：${(result).toString()}'),
-                  Card(
-                    margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                    child: LinearProgressIndicator(
-                      value: list[0].correct / list[0].ttl,
-                      backgroundColor: Colors.grey.shade200,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
-                      //minHeight: 10.0,
-                    ),
+                  Container(
+                      margin: const EdgeInsets.all(16.0),
+                      width: 150,
+                      height: 35,
+                      child: Column(
+                          children: [
+                            Text('單句測驗：${(result[0]*100).toStringAsFixed(2)}%'),
+                            LinearProgressIndicator(
+                              value: result[0],
+                              backgroundColor: Colors.grey.shade200,
+                              valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
+                              minHeight: 15.0,
+                            ),
+                          ]
+                      )
                   ),
-                  SizedBox(
-                    height: 20,
+                  Container(
+                      margin: const EdgeInsets.all(16.0),
+                      width: 150,
+                      height: 35,
+                      child: Column(
+                          children: [
+                            Text('對話理解：${(result[1]*100).toStringAsFixed(2)}%'),
+                            LinearProgressIndicator(
+                              value: result[1],
+                              backgroundColor: Colors.grey.shade200,
+                              valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
+                              minHeight: 15.0,
+                            ),
+                          ]
+                      )
                   ),
-                  Text('對話理解進度：'),
-                  Card(
-                    margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                    child: LinearProgressIndicator(
-                      value: list[1].correct / list[1].ttl,
-                      backgroundColor: Colors.grey.shade200,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
-                      //minHeight: 10.0,
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Text('閱讀測驗進度：'),
-                  Card(
-                    margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                    child: LinearProgressIndicator(
-                      value: list[2].correct / list[2].ttl,
-                      backgroundColor: Colors.grey.shade200,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
-                      //minHeight: 10.0,
-                    ),
+                  Container(
+                      margin: const EdgeInsets.all(16.0),
+                      width: 150,
+                      height: 35,
+                      child: Column(
+                          children: [
+                            Text('閱讀測驗：${(result[2]*100).toStringAsFixed(2)}%'),
+                            LinearProgressIndicator(
+                              value: result[2],
+                              backgroundColor: Colors.grey.shade200,
+                              valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
+                              minHeight: 15.0,
+                            ),
+                          ]
+                      )
                   ),
                 ],
               );
