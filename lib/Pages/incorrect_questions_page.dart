@@ -237,7 +237,6 @@ class _IncorrectQuestionsPageState extends State<IncorrectQuestionsPage> {
           );
         },
       ),
-      bottomNavigationBar: const BottomNavBar(selectedIndex: 2), // 底下的導覽欄
     );
   }
 

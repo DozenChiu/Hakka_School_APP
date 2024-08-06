@@ -61,7 +61,7 @@ Future<void> _createDatabaseTables(Database database) async {
   await database.execute('''
     CREATE TABLE IF NOT EXISTS favorite (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT,
+      Name TEXT,
       No INTEGER
     )
   ''');

@@ -220,7 +220,6 @@ class _QuizRecordPageState extends State<QuizRecordPage> {
           );
         },
       ),
-      bottomNavigationBar: const BottomNavBar(selectedIndex: 2), // 底部導航欄
     );
   }
 

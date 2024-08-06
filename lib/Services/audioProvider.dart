@@ -7,7 +7,14 @@ class AudioProvider {
   bool isPlaying = false;
 
   Future<void> playAudio(String table,String index) async {
-    table = table=='Listen_1' ? 'Lis_01':'Lis_02';
+    if (table == 'Listen_1') {
+      table = 'Lis_01';
+      index = '01_$index';
+    }
+    else {
+      table = 'Lis_02';
+      index = '02_$index';
+    }
     final String path = 'Sound/$table/$index.mp3';
     if (isPlaying) {
       await _player.stop();
@@ -31,7 +38,7 @@ class ImgProvider {
     String path = 'assets/Picture/${table}_${no}_$option.png';
     return path;
   }
-/*
+
   Future<bool> imageExists(String path) async {
     try {
       final file = File(path);
@@ -40,5 +47,5 @@ class ImgProvider {
       return false;
     }
   }
- */
+
 }

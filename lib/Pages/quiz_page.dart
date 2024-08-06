@@ -1,7 +1,7 @@
+import 'package:Hakka_School/Pages/main.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:path/path.dart';
-import 'bottom_nav_bar.dart';
 import 'dart:async';
 import 'quiz_records_page.dart';
 import 'dart:io';
@@ -149,7 +149,10 @@ class _QuizPageState extends State<QuizPage> {
             onPressed: () {
               Navigator.of(context).pop();
               Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => QuizRecordPage()),
+                MaterialPageRoute(builder: (context) => MyHomePage()),
+              );
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => QuizRecordPage())
               );
             },
           ),
@@ -396,7 +399,6 @@ class _QuizPageState extends State<QuizPage> {
           );
         },
       ),
-      bottomNavigationBar: const BottomNavBar(selectedIndex: 2), // 底部導航欄
       floatingActionButton: FloatingActionButton(
         onPressed: _submitAnswers,
         child: Center(

@@ -1,43 +1,42 @@
 import 'package:Hakka_School/Services/database_helper.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'dart:io';
 import '../Services/audioProvider.dart';
 
-class SingleSentencePage extends StatelessWidget {
+class SingleSentencePage extends StatefulWidget {
   const SingleSentencePage({super.key});
-  Future<List<Map<String, dynamic>>> _fetchListenings() async {
-    final dbPath = await databaseFactory.getDatabasesPath();
-    final path = join(dbPath, 'Quiz.db'); // print('Database path: $path');
-    final db = await databaseFactory.openDatabase(path);
-    return await db.query('Listen_1', orderBy: 'No');
+
+  @override
+  SingleSentenceState createState() => SingleSentenceState();
+}
+
+class SingleSentenceState extends State<SingleSentencePage> {
+  final dbHelper = DatabaseHelper();
+  final imgProvider = ImgProvider();
+  final audioProvider = AudioProvider();
+  List<Question>? _listening;
+
+
+  @override
+  void initState() {
+    super.initState();
+    refresh();
   }
 
-  String _getImagePath(int no, int option) {
-    return 'assets/Picture/listen1_${no}_${option}.png';
-  }
-
-  Future<bool> _imageExists(String path) async {
-    try {
-      final file = File(path);
-      return await file.exists();
-    } catch (e) {
-      return false;
-    }
+  void refresh() async {
+    final listening = await dbHelper.fetchQuestion('Listen_1');
+    setState(() {
+      _listening = listening;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final audioPlayerProvider = AudioProvider();
-    final dbHelper = DatabaseHelper();
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back), // 如果退出頁面，停止音樂
           onPressed: () {
-            audioPlayerProvider.stopAudio();
+            audioProvider.stopAudio();
             Navigator.pop(context);
           },
         ),
@@ -46,43 +45,30 @@ class SingleSentencePage extends StatelessWidget {
           style: TextStyle(color: Colors.white),
         ),
       ),
-      body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: _fetchListenings(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          final listenings = snapshot.data!;
-          return ListView.builder(
-            itemCount: listenings.length,
-            itemBuilder: (context, index) {
-              final listening = listenings[index];
-              final no = listening['No'] as int;
+      body: _listening==null?const Center(child: CircularProgressIndicator())
+          :ListView.builder(
+          itemCount: _listening?.length ?? 0,
+          itemBuilder: (context, index) {
+              final listening_1 = _listening![index];
+              final no = listening_1.num;
+              final table = listening_1.table;
+              List<String> imgPath = ['','','',''];
 
-              final option1ImagePath = _getImagePath(no, 1);
-              final option2ImagePath = _getImagePath(no, 2);
-              final option3ImagePath = _getImagePath(no, 3);
-              final questionImagePath = _getImagePath(no, 0);
+              for (int i=0; i<4; i++) {
+                imgPath[i] = imgProvider.getImagePath(table, no,i);
+              }
 
               return FutureBuilder(
-                future: Future.wait([
-                  _imageExists(option1ImagePath),
-                  _imageExists(option2ImagePath),
-                  _imageExists(option3ImagePath),
-                  _imageExists(questionImagePath),
-                ]),
+                future: Future.wait(imgPath.map((path) => imgProvider.imageExists(path)).toList()),
                 builder: (context, AsyncSnapshot<List<bool>> imageSnapshots) {
                   if (!imageSnapshots.hasData) {
                     return const Center(child: CircularProgressIndicator());
                   }
+                  List<bool> hasPic = [false,false,false,false];
 
-                  final hasOption1Pic = imageSnapshots.data![0];
-                  final hasOption2Pic = imageSnapshots.data![1];
-                  final hasOption3Pic = imageSnapshots.data![2];
-                  final hasQuestionPic = imageSnapshots.data![3];
+                  for (int i=0; i<4; i++) {
+                    hasPic[i] = imageSnapshots.data![i];
+                  }
 
                   return Card(
                     margin: const EdgeInsets.all(8.0),
@@ -96,7 +82,7 @@ class SingleSentencePage extends StatelessWidget {
                           children: [
                             Text(
                               'No: $no',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -104,95 +90,98 @@ class SingleSentencePage extends StatelessWidget {
                             IconButton(
                                 icon: const Icon(Icons.volume_up_rounded),
                                 onPressed: () {
-                                  audioPlayerProvider.playAudio(
-                                      'Listen_1', '01_${no.toString()}');
+                                  audioProvider.playAudio(table, no.toString());
                                 }),
+
                               IconButton(
-                              icon: const Icon(Icons.star_border),
-                              onPressed: (){
-                                dbHelper.insertFavorite('Listen_1', no);
-                              },
-                            )
+                              icon: Icon(listening_1.isFavorite? Icons.star:Icons.star_border,
+                                color: Colors.yellow,
+                              ),
+                              onPressed: () async {
+                                if (listening_1.isFavorite) {
+                                  await dbHelper.removeFavoriteData(table, no);
+                                } else {
+                                  await dbHelper.insertFavorite(table, no);
+                                }
+                                refresh();
+                              },)
                           ]),
 
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           // 題目圖片或文字
-                          if (hasQuestionPic)
+                          if (hasPic[0])
                             SizedBox(
                               width: double.infinity,
                               height: 100, // 限制題目圖片的高度
                               child: Image.asset(
-                                questionImagePath,
+                                imgPath[0],
                                 fit: BoxFit.contain,
                               ),
                             )
                           else
-                            Text(listening['Questions'] ?? 'No Question'),
+                            Text(listening_1.text),
 
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
 
                           // 選項圖片或文字
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              if (listening['Option_1'] != null)
                                 Expanded(
+                                  child: Card(
                                     child: Column(
                                       children: [
-                                        if (hasOption1Pic)
+                                        if (hasPic[1])
                                           Image.asset(
-                                            option1ImagePath,
+                                            imgPath[1],
                                             width: 80, // 調整選項圖片的寬度
                                             height: 80, // 調整選項圖片的高度
                                             fit: BoxFit.contain, // 保持圖片比例
                                           )
                                         else
                                           Text(
-                                            '1. ${listening['Option_1'] ?? 'N/A'}', // 顯示選項編號
+                                            '1. ${listening_1.opt[0]}', // 顯示選項編號
                                             textAlign: TextAlign.center,
                                           ),
                                       ],
                                     ),
                                 ),
-                              if (listening['Option_2'] != null)
+                                ),
                                 Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: () {},
+                                  child: Card(
                                     child: Column(
                                       children: [
-                                        if (hasOption2Pic)
+                                        if (hasPic[2])
                                           Image.asset(
-                                            option2ImagePath,
+                                            imgPath[2],
                                             width: 80, // 調整選項圖片的寬度
                                             height: 80, // 調整選項圖片的高度
                                             fit: BoxFit.contain, // 保持圖片比例
                                           )
                                         else
                                           Text(
-                                            '2. ${listening['Option_2'] ?? 'N/A'}', // 顯示選項編號
+                                            '2. ${listening_1.opt[1]}', // 顯示選項編號
                                             textAlign: TextAlign.center,
                                           ),
                                       ],
                                     ),
                                   ),
                                 ),
-                              if (listening['Option_3'] != null)
                                 Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: () {},
+                                  child: Card(
                                     child: Column(
                                       children: [
-                                        if (hasOption3Pic)
+                                        if (hasPic[3])
                                           Image.asset(
-                                            option3ImagePath,
+                                            imgPath[3],
                                             width: 80, // 調整選項圖片的寬度
                                             height: 80, // 調整選項圖片的高度
                                             fit: BoxFit.contain, // 保持圖片比例
                                           )
                                         else
                                           Text(
-                                            '3. ${listening['Option_3'] ?? 'N/A'}', // 顯示選項編號
+                                            '3. ${listening_1.opt[2]}', // 顯示選項編號
                                             textAlign: TextAlign.center,
                                           ),
                                       ],
@@ -201,11 +190,11 @@ class SingleSentencePage extends StatelessWidget {
                                 ),
                             ],
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
 
                           Text(
-                            'Answer: ${listening['Answer'] ?? 'N/A'}',
-                            style: TextStyle(
+                            'Answer: ${listening_1.ans}',
+                            style: const TextStyle(
                               color: Colors.blueAccent,
                               fontWeight: FontWeight.bold,
                             ),
@@ -217,9 +206,7 @@ class SingleSentencePage extends StatelessWidget {
                 },
               );
             },
-          );
-        },
-      ),
+          )
     );
   }
 }

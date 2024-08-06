@@ -1,42 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'dart:io';
 import '../Services/audioProvider.dart';
+import 'package:Hakka_School/Services/database_helper.dart';
 
-class DialoguePage extends StatelessWidget {
+class DialoguePage extends StatefulWidget {
   const DialoguePage({super.key});
 
-  Future<List<Map<String, dynamic>>> _fetchDialogues() async {
-    final dbPath = await databaseFactory.getDatabasesPath();
-    final path = join(dbPath, 'Quiz.db');
-    // print('Database path: $path');
-    final db = await databaseFactory.openDatabase(path);
-    return await db.query('Listen_2', orderBy: 'No');
+  @override
+  DialogueState createState() => DialogueState();
+}
+
+
+class DialogueState extends State<DialoguePage> {
+  final dbHelper = DatabaseHelper();
+  final imgProvider = ImgProvider();
+  final audioProvider = AudioProvider();
+  List<Question>? _listening;
+
+  @override
+  void initState() {
+    super.initState();
+    refresh();
   }
 
-  String _getImagePath(int no, int option) {
-    return 'assets/Picture/listen2_${no}_${option}.png';
-  }
-
-  Future<bool> _imageExists(String path) async {
-    try {
-      final file = File(path);
-      return await file.exists();
-    } catch (e) {
-      return false;
-    }
+  void refresh() async {
+    final listening = await dbHelper.fetchQuestion('Listen_2');
+    setState(() {
+      _listening = listening;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final audioPlayerProvider = AudioProvider();
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back), // 如果退出頁面，停止音樂
           onPressed: () {
-            audioPlayerProvider.stopAudio();
+            audioProvider.stopAudio();
             Navigator.pop(context);
           },
         ),
@@ -45,43 +45,30 @@ class DialoguePage extends StatelessWidget {
           style: TextStyle(color: Colors.white),
         ),
       ),
-      body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: _fetchDialogues(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          final dialogues = snapshot.data!;
-          return ListView.builder(
-            itemCount: dialogues.length,
-            itemBuilder: (context, index) {
-              final dialogue = dialogues[index];
-              final no = dialogue['No'] as int;
+      body: _listening==null?const Center(child: CircularProgressIndicator())
+        :ListView.builder(
+        itemCount: _listening?.length ?? 0,
+        itemBuilder: (context, index) {
+        final listening_2 = _listening![index];
+        final no = listening_2.num;
+        final table = listening_2.table;
 
-              final option1ImagePath = _getImagePath(no, 1);
-              final option2ImagePath = _getImagePath(no, 2);
-              final option3ImagePath = _getImagePath(no, 3);
-              final questionImagePath = _getImagePath(no, 0);
+              List<String> imgPath = ['','','',''];
+              for (int i=0; i<4; i++) {
+                imgPath[i] = imgProvider.getImagePath('Listen_2', no,i);
+              }
 
               return FutureBuilder(
-                future: Future.wait([
-                  _imageExists(option1ImagePath),
-                  _imageExists(option2ImagePath),
-                  _imageExists(option3ImagePath),
-                  _imageExists(questionImagePath),
-                ]),
+                future: Future.wait(imgPath.map((path) => imgProvider.imageExists(path)).toList()),
                 builder: (context, AsyncSnapshot<List<bool>> imageSnapshots) {
                   if (!imageSnapshots.hasData) {
                     return const Center(child: CircularProgressIndicator());
                   }
 
-                  final hasOption1Pic = imageSnapshots.data![0];
-                  final hasOption2Pic = imageSnapshots.data![1];
-                  final hasOption3Pic = imageSnapshots.data![2];
-                  final hasQuestionPic = imageSnapshots.data![3];
+                  List<bool> hasPic = [false,false,false,false];
+                  for (int i=0; i<4; i++) {
+                    hasPic[i] = imageSnapshots.data![i];
+                  }
 
                   return Card(
                     margin: const EdgeInsets.all(8.0),
@@ -94,99 +81,106 @@ class DialoguePage extends StatelessWidget {
                           Row(children: [
                             Text(
                               'No: $no',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             IconButton(
                                 icon: const Icon(Icons.volume_up_rounded),
-                                onPressed: () {
-                                  audioPlayerProvider.playAudio(
-                                      'Listen_2', '02_${no.toString()}');
+                                onPressed: (){
+                                  audioProvider.playAudio(
+                                      'Listen_2', no.toString());
                                 }),
+                            IconButton(
+                              icon: Icon(listening_2.isFavorite? Icons.star:Icons.star_border,
+                                  color: Colors.yellow
+                              ),
+                              onPressed: () async {
+                                if (listening_2.isFavorite) {
+                                  await dbHelper.removeFavoriteData(table, no);
+                                } else {
+                                  await dbHelper.insertFavorite(table, no);
+                                }
+                                refresh();
+                              },
+                            )
                           ]),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
 
                           // 題目圖片或文字
-                          if (hasQuestionPic)
+                          if (hasPic[0])
                             SizedBox(
                               width: double.infinity,
                               height: 100, // 限制題目圖片的高度
                               child: Image.asset(
-                                questionImagePath,
+                                imgPath[0],
                                 fit: BoxFit.contain,
                               ),
                             )
                           else
-                            Text(dialogue['Questions'] ?? 'No Question'),
+                            Text(listening_2.text),
 
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
 
                           // 選項圖片或文字
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              if (dialogue['Option_1'] != null)
                                 Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: () {},
+                                  child: Card(
                                     child: Column(
                                       children: [
-                                        if (hasOption1Pic)
+                                        if (hasPic[1])
                                           Image.asset(
-                                            option1ImagePath,
+                                            imgPath[1],
                                             width: 80, // 調整選項圖片的寬度
                                             height: 80, // 調整選項圖片的高度
                                             fit: BoxFit.contain, // 保持圖片比例
                                           )
                                         else
                                           Text(
-                                            '1. ${dialogue['Option_1'] ?? 'N/A'}',
+                                            '1. ${listening_2.opt[0]}',
                                             textAlign: TextAlign.center,
                                           ),
                                       ],
                                     ),
                                   ),
                                 ),
-                              if (dialogue['Option_2'] != null)
                                 Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: () {},
+                                  child: Card(
                                     child: Column(
                                       children: [
-                                        if (hasOption2Pic)
+                                        if (hasPic[2])
                                           Image.asset(
-                                            option2ImagePath,
+                                            imgPath[2],
                                             width: 80, // 調整選項圖片的寬度
                                             height: 80, // 調整選項圖片的高度
                                             fit: BoxFit.contain, // 保持圖片比例
                                           )
                                         else
                                           Text(
-                                            '2. ${dialogue['Option_2'] ?? 'N/A'}',
+                                            '2. ${listening_2.opt[1]}',
                                             textAlign: TextAlign.center,
                                           ),
                                       ],
                                     ),
                                   ),
                                 ),
-                              if (dialogue['Option_3'] != null)
                                 Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: () {},
+                                  child: Card(
                                     child: Column(
                                       children: [
-                                        if (hasOption3Pic)
+                                        if (hasPic[3])
                                           Image.asset(
-                                            option3ImagePath,
+                                            imgPath[3],
                                             width: 80, // 調整選項圖片的寬度
                                             height: 80, // 調整選項圖片的高度
                                             fit: BoxFit.contain, // 保持圖片比例
                                           )
                                         else
                                           Text(
-                                            '3. ${dialogue['Option_3'] ?? 'N/A'}',
+                                            '3. ${listening_2.opt[2]}',
                                             textAlign: TextAlign.center,
                                           ),
                                       ],
@@ -195,11 +189,11 @@ class DialoguePage extends StatelessWidget {
                                 ),
                             ],
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
 
                           Text(
-                            'Answer: ${dialogue['Answer'] ?? 'N/A'}',
-                            style: TextStyle(
+                            'Answer: ${listening_2.ans}',
+                            style: const TextStyle(
                               color: Colors.blueAccent,
                               fontWeight: FontWeight.bold,
                             ),
@@ -208,8 +202,6 @@ class DialoguePage extends StatelessWidget {
                       ),
                     ),
                   );
-                },
-              );
             },
           );
         },
