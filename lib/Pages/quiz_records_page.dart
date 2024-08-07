@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'dart:io';
-import 'bottom_nav_bar.dart';
+import 'package:sqflite/sqflite.dart'; // 改成使用 sqflite
+import 'package:flutter/services.dart' show rootBundle; // 讀取圖片方式的套件
 
 class QuizRecordPage extends StatefulWidget {
   @override
@@ -20,10 +19,11 @@ class _QuizRecordPageState extends State<QuizRecordPage> {
   }
 
   Future<void> _loadQuizScores() async {
-    final dbPath = join(await databaseFactoryFfi.getDatabasesPath(), 'Quiz.db');
-    final database = await databaseFactoryFfi.openDatabase(dbPath);
+    final dbPath = join(await getDatabasesPath(), 'Quiz.db');
+    final database = await openDatabase(dbPath); // 使用 sqflite 的 openDatabase 方法
 
-    final List<Map<String, dynamic>> scores = await database.query('quiz_score', orderBy: 'timestamp DESC');
+    final List<Map<String, dynamic>> scores =
+        await database.query('quiz_score', orderBy: 'timestamp DESC');
 
     setState(() {
       _quizScores = scores;
@@ -31,8 +31,8 @@ class _QuizRecordPageState extends State<QuizRecordPage> {
   }
 
   Future<void> _loadExpandedRecords(int testId) async {
-    final dbPath = join(await databaseFactoryFfi.getDatabasesPath(), 'Quiz.db');
-    final database = await databaseFactoryFfi.openDatabase(dbPath);
+    final dbPath = join(await getDatabasesPath(), 'Quiz.db'); // 使用 sqflite 的 getDatabasesPath 方法
+    final database = await openDatabase(dbPath); // 使用 sqflite 的 openDatabase 方法
 
     final List<Map<String, dynamic>> records = await database.rawQuery('''
       SELECT qr.question_id, qr.user_answer, qr.correct_answer,
@@ -52,14 +52,16 @@ class _QuizRecordPageState extends State<QuizRecordPage> {
     });
   }
 
-  String _getImagePath(String tableName, int questionNumber, int optionNumber) { // 照片路徑
-    return 'assets/Picture/${tableName.toLowerCase().replaceAll('_', '')}_${questionNumber}_$optionNumber.png';
+  String _getImagePath(String table, int no, int option) {
+    if (table == "Reading") return "";
+    table = table == "Listen_1" ? "listen1" : "listen2";
+    return 'assets/Picture/${table}_${no}_$option.png';
   }
 
-  Future<bool> _imageExists(String path) async { //判斷照片是否存在
+  Future<bool> _imageExists(String path) async {
     try {
-      final file = File(path);
-      return await file.exists();
+      final byteData = await rootBundle.load(path);
+      return byteData.lengthInBytes > 0;
     } catch (e) {
       return false;
     }
@@ -88,129 +90,140 @@ class _QuizRecordPageState extends State<QuizRecordPage> {
               ),
               subtitle: Text('日期: $timestamp'),
               children: _expandedRecords[testId]?.map((record) {
-                final question = record['Questions'] ?? '未知題目';
-                final userAnswer = record['user_answer'];
-                final correctAnswer = record['correct_answer'];
-                final option1 = record['Option_1'];
-                final option2 = record['Option_2'];
-                final option3 = record['Option_3'];
-                final tableName = record['Table_Name'];
-                final questionId = record['question_id'];
+                    final question = record['Questions'] ?? '未知題目';
+                    final userAnswer = record['user_answer'];
+                    final correctAnswer = record['correct_answer'];
+                    final option1 = record['Option_1'];
+                    final option2 = record['Option_2'];
+                    final option3 = record['Option_3'];
+                    final tableName = record['Table_Name'];
+                    final questionId = record['question_id'];
 
-                final questionImagePath = _getImagePath(tableName, questionId, 0);
+                    final questionImagePath =
+                        _getImagePath(tableName, questionId, 0);
 
-                return FutureBuilder(
-                  future: Future.wait([
-                    _imageExists(_getImagePath(tableName, questionId, 1)),
-                    _imageExists(_getImagePath(tableName, questionId, 2)),
-                    _imageExists(_getImagePath(tableName, questionId, 3)),
-                    _imageExists(questionImagePath),
-                  ]),
-                  builder: (context, AsyncSnapshot<List<bool>> imageSnapshots) {
-                    if (!imageSnapshots.hasData) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
+                    return FutureBuilder(
+                      future: Future.wait([
+                        _imageExists(_getImagePath(tableName, questionId, 1)),
+                        _imageExists(_getImagePath(tableName, questionId, 2)),
+                        _imageExists(_getImagePath(tableName, questionId, 3)),
+                        _imageExists(questionImagePath),
+                      ]),
+                      builder:
+                          (context, AsyncSnapshot<List<bool>> imageSnapshots) {
+                        if (!imageSnapshots.hasData) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
 
-                    final hasOption1Pic = imageSnapshots.data![0];
-                    final hasOption2Pic = imageSnapshots.data![1];
-                    final hasOption3Pic = imageSnapshots.data![2];
-                    final hasQuestionPic = imageSnapshots.data![3];
+                        final hasOption1Pic = imageSnapshots.data![0];
+                        final hasOption2Pic = imageSnapshots.data![1];
+                        final hasOption3Pic = imageSnapshots.data![2];
+                        final hasQuestionPic = imageSnapshots.data![3];
 
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (hasQuestionPic) // 如果有圖片
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 16.0),
-                              child: SizedBox(
-                                width: double.infinity,
-                                height: 100,
-                                child: Image.asset(
-                                  questionImagePath,
-                                  fit: BoxFit.contain,
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (hasQuestionPic) // 如果有圖片
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 16.0),
+                                  child: SizedBox(
+                                    width: double.infinity,
+                                    height: 100,
+                                    child: Image.asset(
+                                      questionImagePath,
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                )
+                              else
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 16.0),
+                                  child: Text(
+                                    question,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16),
+                                  ),
                                 ),
+                              // Display options with numbers
+                              LayoutBuilder(
+                                builder: (context, constraints) {
+                                  double textSize = constraints.maxWidth /
+                                      20; // Adjust size as needed
+                                  return Row(
+                                    children: [
+                                      if (option1 != null)
+                                        Expanded(
+                                          child: _buildOption(
+                                            hasOption1Pic,
+                                            _getImagePath(
+                                                tableName, questionId, 1),
+                                            '1. $option1',
+                                            1,
+                                            textSize,
+                                          ),
+                                        ),
+                                      if (option2 != null)
+                                        Expanded(
+                                          child: _buildOption(
+                                            hasOption2Pic,
+                                            _getImagePath(
+                                                tableName, questionId, 2),
+                                            '2. $option2',
+                                            2,
+                                            textSize,
+                                          ),
+                                        ),
+                                      if (option3 != null)
+                                        Expanded(
+                                          child: _buildOption(
+                                            hasOption3Pic,
+                                            _getImagePath(
+                                                tableName, questionId, 3),
+                                            '3. $option3',
+                                            3,
+                                            textSize,
+                                          ),
+                                        ),
+                                    ],
+                                  );
+                                },
                               ),
-                            )
-                          else
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 16.0),
-                              child: Text(
-                                question,
-                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                              SizedBox(height: 8),
+                              Text(
+                                '您的答案: $userAnswer',
+                                style: TextStyle(color: Colors.blue),
                               ),
-                            ),
-                          // Display options with numbers
-                          LayoutBuilder(
-                            builder: (context, constraints) {
-                              double textSize = constraints.maxWidth / 20; // Adjust size as needed
-                              return Row(
-                                children: [
-                                  if (option1 != null)
-                                    Expanded(
-                                      child: _buildOption(
-                                        hasOption1Pic,
-                                        _getImagePath(tableName, questionId, 1),
-                                        '1. $option1',
-                                        1,
-                                        textSize,
-                                      ),
-                                    ),
-                                  if (option2 != null)
-                                    Expanded(
-                                      child: _buildOption(
-                                        hasOption2Pic,
-                                        _getImagePath(tableName, questionId, 2),
-                                        '2. $option2',
-                                        2,
-                                        textSize,
-                                      ),
-                                    ),
-                                  if (option3 != null)
-                                    Expanded(
-                                      child: _buildOption(
-                                        hasOption3Pic,
-                                        _getImagePath(tableName, questionId, 3),
-                                        '3. $option3',
-                                        3,
-                                        textSize,
-                                      ),
-                                    ),
-                                ],
-                              );
-                            },
+                              Text(
+                                '正確答案: $correctAnswer',
+                                style: TextStyle(color: Colors.red),
+                              ),
+                              Divider(color: Colors.grey),
+                            ],
                           ),
-                          SizedBox(height: 8),
-                          Text(
-                            '您的答案: $userAnswer',
-                            style: TextStyle(color: Colors.blue),
-                          ),
-                          Text(
-                            '正確答案: $correctAnswer',
-                            style: TextStyle(color: Colors.red),
-                          ),
-                          Divider(color: Colors.grey),
-                        ],
-                      ),
+                        );
+                      },
                     );
-                  },
-                );
-              })?.toList() ?? [
-                ListTile(
-                  title: Text('點擊查看詳情'),
-                  onTap: () => _loadExpandedRecords(testId),
-                )
-              ],
+                  })?.toList() ??
+                  [
+                    ListTile(
+                      title: Text('點擊查看詳情'),
+                      onTap: () => _loadExpandedRecords(testId),
+                    )
+                  ],
             ),
           );
         },
       ),
-      bottomNavigationBar: const BottomNavBar(selectedIndex: 2), // 底部導航欄
     );
   }
 
-  Widget _buildOption(bool hasPic, String imagePath, String text, int optionNumber, double textSize) {
+  Widget _buildOption(bool hasPic, String imagePath, String text,
+      int optionNumber, double textSize) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 8.0),
       padding: EdgeInsets.all(8.0), // 增加 padding
@@ -230,7 +243,7 @@ class _QuizRecordPageState extends State<QuizRecordPage> {
         children: [
           if (hasPic) // 如有圖片
             SizedBox(
-              width: 100,  // 圖片的寬度
+              width: 100, // 圖片的寬度
               height: 100, // 圖片的高度
               child: Image.asset(
                 imagePath,
@@ -251,7 +264,8 @@ class _QuizRecordPageState extends State<QuizRecordPage> {
               padding: const EdgeInsets.only(top: 4.0),
               child: Text(
                 '$optionNumber',
-                style: TextStyle(fontSize: 14, color: Colors.black87), // 選項圖片的數字
+                style:
+                    TextStyle(fontSize: 14, color: Colors.black87), // 選項圖片的數字
               ),
             ),
         ],

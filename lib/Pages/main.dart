@@ -4,7 +4,7 @@ import 'package:Hakka_School/Theme/light_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'bottom_nav_bar.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:sqflite/sqflite.dart'; // 修改這裡，改成sqflite
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
@@ -12,15 +12,13 @@ import 'incorrect_questions_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  sqfliteFfiInit();
-  databaseFactory = databaseFactoryFfi;
 
   // 複製資料庫
   await _copyDatabaseFromAssets();
 
-  final dbPath = await databaseFactory.getDatabasesPath();
+  final dbPath = await getDatabasesPath(); // 修改這裡
   final path = join(dbPath, 'Quiz.db');
-  final database = await databaseFactory.openDatabase(path);
+  final database = await openDatabase(path); // 修改這裡
 
   // 初始化資料庫表格
   await _createDatabaseTables(database);
@@ -57,10 +55,18 @@ Future<void> _createDatabaseTables(Database database) async {
       timestamp TEXT
     )
   ''');
+  // 建立 favorite 表，紀錄我的題目
+  await database.execute('''
+    CREATE TABLE IF NOT EXISTS favorite (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      Name TEXT,
+      No INTEGER
+    )
+  ''');
 }
 
 Future<void> _copyDatabaseFromAssets() async {
-  final dbPath = await databaseFactory.getDatabasesPath();
+  final dbPath = await getDatabasesPath(); // 使用 sqflite 的 getDatabasesPath 方法
   final path = join(dbPath, 'Quiz.db');
 
   // 檢查資料庫文件是否已經存在
@@ -93,11 +99,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo', // 設置應用程序的標題
-        theme: lightMode,
-        home: MyHomePage(), // 設置主頁面為 MyHomePage 小部件
-      );
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo', // 設置應用程序的標題
+      theme: lightMode,
+      home: MyHomePage(), // 設置主頁面為 MyHomePage 小部件
+    );
   }
 }
 
@@ -114,7 +120,7 @@ class MyHomePage extends StatelessWidget {
           style: TextStyle(color: Colors.white), // 設置標題文字顏色為白色
         ),
       ),
-      body:  Center(
+      body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0), // 設置內邊距為16.0
           child: Column(
@@ -129,39 +135,39 @@ class MyHomePage extends StatelessWidget {
               ElevatedButton.icon(
                 label: const Text('查看測驗紀錄'),
                 onPressed: () {
-                Navigator.push(
-                context,
-              MaterialPageRoute(builder: (context) => QuizRecordPage()),
-                );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => QuizRecordPage()),
+                  );
                 },
               ),
               const SizedBox(height: 20), // 添加一個高度為20的空間
               ElevatedButton.icon(
                 label: const Text('查看錯誤題目'),
                 onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const IncorrectQuestionsPage()),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const IncorrectQuestionsPage()),
                   );
                 },
               ),
               const SizedBox(height: 20),
               ElevatedButton.icon(
                   label: const Text("我的題目"),
-                  onPressed: (){
+                  onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const MyFavorite()),
+                      MaterialPageRoute(
+                          builder: (context) => MyFavorite()),
                     );
-                  }
-              ),
+                  }),
               const SizedBox(height: 20),
               ElevatedButton.icon(
                   label: const Text("關於"),
-                    onPressed: (){
+                  onPressed: () {
                     showAlertDialog(context);
-                  }
-              ),
+                  }),
             ],
           ),
         ),
@@ -169,6 +175,7 @@ class MyHomePage extends StatelessWidget {
       bottomNavigationBar: const BottomNavBar(selectedIndex: 0), // 底部導航欄
     );
   }
+
   Future<void> showAlertDialog(BuildContext context) {
     return showDialog<void>(
       context: context,
@@ -180,7 +187,8 @@ class MyHomePage extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               InkWell(
-                onTap: () => launchUrlString('https://hakkaexam.hakka.gov.tw/hakka/'),
+                onTap: () =>
+                    launchUrlString('https://hakkaexam.hakka.gov.tw/hakka/'),
                 child: const Text(
                   '報名考試',
                   style: TextStyle(
@@ -218,4 +226,3 @@ class MyHomePage extends StatelessWidget {
     );
   }
 }
-

@@ -1,8 +1,7 @@
+import 'package:Hakka_School/Pages/main.dart';
 import 'package:flutter/material.dart';
-// import 'package:sqflite/sqflite.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:sqflite/sqflite.dart'; // 修改這裡，改成sqflite
 import 'package:path/path.dart';
-import 'bottom_nav_bar.dart';
 import 'dart:async';
 import 'quiz_records_page.dart';
 import 'dart:io';
@@ -36,9 +35,9 @@ class _QuizPageState extends State<QuizPage> {
   }
 
   Future<void> _initializeDatabase() async { //載入測驗區頁面需要先初始化資料庫
-    final dbPath = await getDatabasesPath();
+    final dbPath = await getDatabasesPath(); // 修改這裡
     final path = join(dbPath, 'Quiz.db');
-    _database = await openDatabase(path);
+    _database = await openDatabase(path); // 修改這裡
     await _fetchQuestions();
   }
 
@@ -103,6 +102,15 @@ class _QuizPageState extends State<QuizPage> {
       if (userAnswer == correctAnswer) {
         // 比對答案，判斷是否正確
         correctAnswers++;
+        final int id = question['No'];
+        Map<String, int> mp = {
+          'HasCorrected': 1
+        };
+        await _database.update(
+            question['Table_Name'],
+            mp,
+            where: 'No == $id and HasCorrected != 1'
+        );
       } else {
         // 如果有錯則寫進資料庫 quiz_error，其內容之後顯示於錯誤題目頁面
         await _database.insert('quiz_error', {
@@ -141,7 +149,10 @@ class _QuizPageState extends State<QuizPage> {
             onPressed: () {
               Navigator.of(context).pop();
               Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => QuizRecordPage()),
+                MaterialPageRoute(builder: (context) => MyHomePage()),
+              );
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => QuizRecordPage())
               );
             },
           ),
@@ -388,7 +399,6 @@ class _QuizPageState extends State<QuizPage> {
           );
         },
       ),
-      bottomNavigationBar: const BottomNavBar(selectedIndex: 2), // 底部導航欄
       floatingActionButton: FloatingActionButton(
         onPressed: _submitAnswers,
         child: Center(

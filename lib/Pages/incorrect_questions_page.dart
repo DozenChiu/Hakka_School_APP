@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'dart:io';
-import 'bottom_nav_bar.dart';
+import 'package:sqflite/sqflite.dart'; // 修改這裡，改成sqflite
+import 'package:flutter/services.dart' show rootBundle; // 讀取圖片方式的套件
 
 class IncorrectQuestionsPage extends StatefulWidget {
   const IncorrectQuestionsPage({Key? key}) : super(key: key);
@@ -20,12 +19,10 @@ class _IncorrectQuestionsPageState extends State<IncorrectQuestionsPage> {
     _loadErrors();
   }
 
-  Future<void> _loadErrors() async { // 進入頁面第一步
-    sqfliteFfiInit();
-    databaseFactory = databaseFactoryFfi;
-
-    final dbPath = join(await databaseFactoryFfi.getDatabasesPath(), 'Quiz.db');
-    final database = await databaseFactoryFfi.openDatabase(dbPath);
+  Future<void> _loadErrors() async {
+    // 進入頁面第一步
+    final dbPath = join(await getDatabasesPath(), 'Quiz.db');// 使用 sqflite 的 getDatabasesPath 方法
+    final database = await openDatabase(dbPath);//使用 sqflite 的 openDatabase 方法
 
     final errors = await database.rawQuery('''
       SELECT qe.*, q.Questions, q.Option_1, q.Option_2, q.Option_3
@@ -44,11 +41,13 @@ class _IncorrectQuestionsPageState extends State<IncorrectQuestionsPage> {
     });
   }
 
-  Future<void> _deleteError(int id) async { // 用來刪除錯誤題目
-    final dbPath = join(await databaseFactoryFfi.getDatabasesPath(), 'Quiz.db');
-    final database = await databaseFactoryFfi.openDatabase(dbPath);
+  Future<void> _deleteError(int id) async {
+    // 用來刪除錯誤題目
+    final dbPath = join(await getDatabasesPath(), 'Quiz.db'); // 使用 sqflite 的 getDatabasesPath 方法
+    final database = await openDatabase(dbPath); // 使用 sqflite 的 openDatabase 方法
 
-    await database.delete( // 這邊要小心語法
+    await database.delete(
+      // 這邊要小心語法
       'quiz_error',
       where: 'id = ?',
       whereArgs: [id],
@@ -57,19 +56,23 @@ class _IncorrectQuestionsPageState extends State<IncorrectQuestionsPage> {
     await _loadErrors(); // 一定要有這行，因為按下刪除按鈕需要立即頁面重新整理
   }
 
-  String _getImagePath(String tableName, int questionNumber, int optionNumber) { // 確認圖片位置
-    return 'assets/Picture/${tableName.toLowerCase().replaceAll('_', '')}_${questionNumber}_$optionNumber.png';
+  String _getImagePath(String table, int no, int option) {
+    if (table == "Reading") return "";
+    table = table == "Listen_1" ? "listen1" : "listen2";
+    return 'assets/Picture/${table}_${no}_$option.png';
   }
 
-  Future<bool> _imageExists(String path) async { // 檢查圖片是否存在
+  Future<bool> _imageExists(String path) async {
     try {
-      final file = File(path);
-      return await file.exists();
+      final byteData = await rootBundle.load(path);
+      return byteData.lengthInBytes > 0;
     } catch (e) {
       return false;
     }
   }
-  String _convertTableName(String tableName) { // 用來顯示錯誤題目來自哪個資料表?，類似 map 操作
+
+  String _convertTableName(String tableName) {
+    // 用來顯示錯誤題目來自哪個資料表?，類似 map 操作
     switch (tableName) {
       case 'Listen_1':
         return '聽力能力的單句';
@@ -123,7 +126,8 @@ class _IncorrectQuestionsPageState extends State<IncorrectQuestionsPage> {
                       _imageExists(_getImagePath(tableName, questionId, 3)),
                       _imageExists(questionImagePath),
                     ]),
-                    builder: (context, AsyncSnapshot<List<bool>> imageSnapshots) {
+                    builder:
+                        (context, AsyncSnapshot<List<bool>> imageSnapshots) {
                       if (!imageSnapshots.hasData) {
                         return const Center(child: CircularProgressIndicator());
                       }
@@ -134,7 +138,8 @@ class _IncorrectQuestionsPageState extends State<IncorrectQuestionsPage> {
                       final hasQuestionPic = imageSnapshots.data![3];
 
                       return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8.0, horizontal: 16.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -155,7 +160,9 @@ class _IncorrectQuestionsPageState extends State<IncorrectQuestionsPage> {
                                 padding: const EdgeInsets.only(bottom: 16.0),
                                 child: Text(
                                   question,
-                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
                                 ),
                               ),
                             LayoutBuilder(
@@ -167,7 +174,8 @@ class _IncorrectQuestionsPageState extends State<IncorrectQuestionsPage> {
                                       Expanded(
                                         child: _buildOption(
                                           hasOption1Pic,
-                                          _getImagePath(tableName, questionId, 1),
+                                          _getImagePath(
+                                              tableName, questionId, 1),
                                           '1. $option1',
                                           1,
                                           textSize,
@@ -177,7 +185,8 @@ class _IncorrectQuestionsPageState extends State<IncorrectQuestionsPage> {
                                       Expanded(
                                         child: _buildOption(
                                           hasOption2Pic,
-                                          _getImagePath(tableName, questionId, 2),
+                                          _getImagePath(
+                                              tableName, questionId, 2),
                                           '2. $option2',
                                           2,
                                           textSize,
@@ -187,7 +196,8 @@ class _IncorrectQuestionsPageState extends State<IncorrectQuestionsPage> {
                                       Expanded(
                                         child: _buildOption(
                                           hasOption3Pic,
-                                          _getImagePath(tableName, questionId, 3),
+                                          _getImagePath(
+                                              tableName, questionId, 3),
                                           '3. $option3',
                                           3,
                                           textSize,
@@ -214,7 +224,8 @@ class _IncorrectQuestionsPageState extends State<IncorrectQuestionsPage> {
                   ),
                 ],
               ),
-              trailing: IconButton( // 刪除按鈕，按了就會刪除該筆資料(錯誤題目)
+              trailing: IconButton(
+                // 刪除按鈕，按了就會刪除該筆資料(錯誤題目)
                 icon: const Icon(Icons.delete),
                 onPressed: () => _deleteError(error['id']),
               ),
@@ -222,15 +233,16 @@ class _IncorrectQuestionsPageState extends State<IncorrectQuestionsPage> {
           );
         },
       ),
-      bottomNavigationBar: const BottomNavBar(selectedIndex: 2), // 底下的導覽欄
     );
   }
 
-  Widget _buildOption(bool hasPic, String imagePath, String text, int optionNumber, double textSize) {
+  Widget _buildOption(bool hasPic, String imagePath, String text,
+      int optionNumber, double textSize) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 8.0),
       padding: EdgeInsets.all(8.0),
-      decoration: BoxDecoration( // 這邊就只是選項的底色方塊，會隨著頁面一起縮放
+      decoration: BoxDecoration(
+        // 這邊就只是選項的底色方塊，會隨著頁面一起縮放
         color: Colors.white,
         borderRadius: BorderRadius.circular(8.0),
         boxShadow: [
