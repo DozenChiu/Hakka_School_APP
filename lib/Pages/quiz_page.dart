@@ -307,11 +307,13 @@ class _QuizPageState extends State<QuizPage> {
                           ],
                         ),
                       SizedBox(height: 8),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      Wrap(
+                        spacing: 8, // 設置按鈕之間的間距
+                        runSpacing: 8, // 設置換行的間距
                         children: [
                           if (question['Option_1'] != null)
-                            Expanded(
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width / 3.15, // 適配螢幕寬度
                               child: ElevatedButton(
                                 onPressed: () {
                                   setState(() {
@@ -323,19 +325,22 @@ class _QuizPageState extends State<QuizPage> {
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        Text('1. '),
                                         if (hasOption1Pic)
-                                          Image.asset(
-                                            _getImagePath(question['Table_Name'], question['No'], 1),
-                                            width: 80,
-                                            height: 80,
-                                            fit: BoxFit.contain,
+                                          Flexible(
+                                            child: Image.asset(
+                                              _getImagePath(question['Table_Name'], question['No'], 1),
+                                              width: 80,
+                                              height: 80,
+                                              fit: BoxFit.contain,
+                                            ),
                                           )
                                         else
-                                          Text(
-                                            ' ${question['Option_1']}',
-                                            style: forHakkaText,
-                                            textAlign: TextAlign.center,
+                                          Expanded(
+                                            child: Text(
+                                              '1. ${question['Option_1']}',
+                                              style: forHakkaText,
+                                              textAlign: TextAlign.center,
+                                            ),
                                           ),
                                       ],
                                     ),
@@ -349,7 +354,8 @@ class _QuizPageState extends State<QuizPage> {
                               ),
                             ),
                           if (question['Option_2'] != null)
-                            Expanded(
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width / 3.15, // 適配螢幕寬度
                               child: ElevatedButton(
                                 onPressed: () {
                                   setState(() {
@@ -361,19 +367,22 @@ class _QuizPageState extends State<QuizPage> {
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        Text('2. '),
                                         if (hasOption2Pic)
-                                          Image.asset(
-                                            _getImagePath(question['Table_Name'], question['No'], 2),
-                                            width: 80,
-                                            height: 80,
-                                            fit: BoxFit.contain,
+                                          Flexible(
+                                            child: Image.asset(
+                                              _getImagePath(question['Table_Name'], question['No'], 2),
+                                              width: 80,
+                                              height: 80,
+                                              fit: BoxFit.contain,
+                                            ),
                                           )
                                         else
-                                          Text(
-                                            ' ${question['Option_2']}',
-                                            style: forHakkaText,
-                                            textAlign: TextAlign.center,
+                                          Expanded(
+                                            child: Text(
+                                              '2. ${question['Option_2']}',
+                                              style: forHakkaText,
+                                              textAlign: TextAlign.center,
+                                            ),
                                           ),
                                       ],
                                     ),
@@ -387,7 +396,8 @@ class _QuizPageState extends State<QuizPage> {
                               ),
                             ),
                           if (question['Option_3'] != null)
-                            Expanded(
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width / 3.15, // 適配螢幕寬度
                               child: ElevatedButton(
                                 onPressed: () {
                                   setState(() {
@@ -399,19 +409,22 @@ class _QuizPageState extends State<QuizPage> {
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        Text('3. '),
                                         if (hasOption3Pic)
-                                          Image.asset(
-                                            _getImagePath(question['Table_Name'], question['No'], 3),
-                                            width: 80,
-                                            height: 80,
-                                            fit: BoxFit.contain,
+                                          Flexible(
+                                            child: Image.asset(
+                                              _getImagePath(question['Table_Name'], question['No'], 3),
+                                              width: 80,
+                                              height: 80,
+                                              fit: BoxFit.contain,
+                                            ),
                                           )
                                         else
-                                          Text(
-                                            ' ${question['Option_3']}',
-                                            style: forHakkaText,
-                                            textAlign: TextAlign.center,
+                                          Expanded(
+                                            child: Text(
+                                              '3. ${question['Option_3']}',
+                                              style: forHakkaText,
+                                              textAlign: TextAlign.center,
+                                            ),
                                           ),
                                       ],
                                     ),
