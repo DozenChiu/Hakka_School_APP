@@ -5,7 +5,7 @@ import 'package:path/path.dart';
 import 'dart:async';
 import '../Services/audioProvider.dart';
 import 'quiz_records_page.dart';
-import 'dart:io';
+import 'package:flutter/services.dart' show rootBundle; // 讀取圖片方式的套件
 
 class QuizPage extends StatefulWidget {
   @override
@@ -201,25 +201,17 @@ class _QuizPageState extends State<QuizPage> {
     );
   }
 
-  String _convertTableName(String tableName) { // 資料庫比對照片名稱，需要做對應
-    return tableName.replaceAll('_', '').toLowerCase();
+  String _getImagePath(String table, int no, int option) {
+    if (table == "Reading") return "";
+    table = table == "Listen_1" ? "listen1" : "listen2";
+    return 'assets/Picture/${table}_${no}_$option.png';
   }
 
-  String _getImagePath(String tableName, int questionNumber, int optionNumber) {
-    final convertedTableName = _convertTableName(tableName);
-    final path = 'assets/Picture/${convertedTableName}_${questionNumber}_$optionNumber.png';
-    // print('Generated image path: $path'); // For debugging
-    return path;
-  }
-
-  Future<bool> _imageExists(String path) async { // 判斷題目or選項，是否有對應圖片
+  Future<bool> _imageExists(String path) async {
     try {
-      final file = File(path);
-      final exists = await file.exists();
-      // print('Checking $path: $exists'); // For debugging
-      return exists;
+      final byteData = await rootBundle.load(path);
+      return byteData.lengthInBytes > 0;
     } catch (e) {
-      // print('Error checking $path: $e'); // For debugging
       return false;
     }
   }
@@ -308,11 +300,13 @@ class _QuizPageState extends State<QuizPage> {
                           ],
                         ),
                       SizedBox(height: 8),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      Wrap(
+                        spacing: 8, // 設置按鈕之間的間距
+                        runSpacing: 8, // 設置換行的間距
                         children: [
                           if (question['Option_1'] != null)
-                            Expanded(
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width / 3.7, // 適配螢幕寬度
                               child: ElevatedButton(
                                 onPressed: () {
                                   setState(() {
@@ -324,19 +318,23 @@ class _QuizPageState extends State<QuizPage> {
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        Text('1. '),
+                                        Text('1.', style: forHakkaText),
                                         if (hasOption1Pic)
-                                          Image.asset(
-                                            _getImagePath(question['Table_Name'], question['No'], 1),
-                                            width: 80,
-                                            height: 80,
-                                            fit: BoxFit.contain,
+                                          Flexible(
+                                            child: Image.asset(
+                                              _getImagePath(question['Table_Name'], question['No'], 1),
+                                              width: 80,
+                                              height: 80,
+                                              fit: BoxFit.contain,
+                                            ),
                                           )
                                         else
-                                          Text(
-                                            ' ${question['Option_1']}',
-                                            style: forHakkaText,
-                                            textAlign: TextAlign.center,
+                                          Expanded(
+                                            child: Text(
+                                              ' ${question['Option_1']}',
+                                              style: forHakkaText,
+                                              textAlign: TextAlign.center,
+                                            ),
                                           ),
                                       ],
                                     ),
@@ -350,7 +348,8 @@ class _QuizPageState extends State<QuizPage> {
                               ),
                             ),
                           if (question['Option_2'] != null)
-                            Expanded(
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width / 3.7, // 適配螢幕寬度
                               child: ElevatedButton(
                                 onPressed: () {
                                   setState(() {
@@ -362,19 +361,23 @@ class _QuizPageState extends State<QuizPage> {
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        Text('2. '),
+                                        Text('2.', style: forHakkaText),
                                         if (hasOption2Pic)
-                                          Image.asset(
-                                            _getImagePath(question['Table_Name'], question['No'], 2),
-                                            width: 80,
-                                            height: 80,
-                                            fit: BoxFit.contain,
+                                          Flexible(
+                                            child: Image.asset(
+                                              _getImagePath(question['Table_Name'], question['No'], 2),
+                                              width: 80,
+                                              height: 80,
+                                              fit: BoxFit.contain,
+                                            ),
                                           )
                                         else
-                                          Text(
-                                            ' ${question['Option_2']}',
-                                            style: forHakkaText,
-                                            textAlign: TextAlign.center,
+                                          Expanded(
+                                            child: Text(
+                                              ' ${question['Option_2']}',
+                                              style: forHakkaText,
+                                              textAlign: TextAlign.center,
+                                            ),
                                           ),
                                       ],
                                     ),
@@ -388,7 +391,8 @@ class _QuizPageState extends State<QuizPage> {
                               ),
                             ),
                           if (question['Option_3'] != null)
-                            Expanded(
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width / 3.7, // 適配螢幕寬度
                               child: ElevatedButton(
                                 onPressed: () {
                                   setState(() {
@@ -400,19 +404,23 @@ class _QuizPageState extends State<QuizPage> {
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        Text('3. '),
+                                        Text('3.', style: forHakkaText),
                                         if (hasOption3Pic)
-                                          Image.asset(
-                                            _getImagePath(question['Table_Name'], question['No'], 3),
-                                            width: 80,
-                                            height: 80,
-                                            fit: BoxFit.contain,
+                                          Flexible(
+                                            child: Image.asset(
+                                              _getImagePath(question['Table_Name'], question['No'], 3),
+                                              width: 80,
+                                              height: 80,
+                                              fit: BoxFit.contain,
+                                            ),
                                           )
                                         else
-                                          Text(
-                                            ' ${question['Option_3']}',
-                                            style: forHakkaText,
-                                            textAlign: TextAlign.center,
+                                          Expanded(
+                                            child: Text(
+                                              ' ${question['Option_3']}',
+                                              style: forHakkaText,
+                                              textAlign: TextAlign.center,
+                                            ),
                                           ),
                                       ],
                                     ),
