@@ -5,16 +5,17 @@ class AudioProvider {
   final _player = AudioPlayer();
   bool isPlaying = false;
 
-  Future<void> playAudio(String table,String index) async {
+  Future<void> playAudio(String table,int index) async {
+    String Index = index.toString();
     if (table == 'Listen_1') {
       table = 'Lis_01';
-      index = '01_$index';
+      Index = '01_$Index';
     }
     else {
       table = 'Lis_02';
-      index = '02_$index';
+      Index = '02_$Index';
     }
-    final String path = 'Sound/$table/$index.mp3';
+    final String path = 'Sound/$table/$Index.mp3';
     if (isPlaying) {
       await _player.stop();
     }

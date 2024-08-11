@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart'; // 修改這裡，改成sqflite
 import 'package:path/path.dart';
 import 'dart:async';
+import '../Services/audioProvider.dart';
 import 'quiz_records_page.dart';
 import 'dart:io';
 
@@ -17,6 +18,18 @@ class _QuizPageState extends State<QuizPage> {
   Map<int, int?> _answers = {}; // 存答題人的選擇答案
   Timer? _timer; // 時間函數宣告
   int _remainingTime = 15 * 60; // 15分鐘倒計時，單位為秒
+  final audioProvider = AudioProvider();
+
+  var forHakkaText = const TextStyle(
+    fontFamily: 'forHakka',
+    fontSize: 16,
+  );
+  var forHakkaBold = const TextStyle(
+    fontFamily: 'forHakka',
+    fontWeight: FontWeight.bold,
+    fontSize: 16,
+  );
+
 
   @override
   void initState() { // 一開始進入頁面要做的事
@@ -130,7 +143,7 @@ class _QuizPageState extends State<QuizPage> {
       });
     }
     // 計算成績
-    final score = (correctAnswers / _questions.length) * 100;
+    final score = ((correctAnswers / _questions.length) * 100).toStringAsFixed(0);;
     // 把成績和考試時間寫進資料庫 quiz_score
     await _database.insert('quiz_score', {
       'id': newTestId,
@@ -166,7 +179,15 @@ class _QuizPageState extends State<QuizPage> {
       context: this.context,
       builder: (context) => AlertDialog(
         title: Text('測驗開始'),
-        content: Text('此測驗需15分鐘，按下確定後開始計時。'),
+        content: const Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('此測驗需15分鐘，按下確定後開始計時'),
+            SizedBox(height: 8),
+            Text('題目為題庫抽選出，請忽略聽力編號'),
+          ],
+        ),
         actions: <Widget>[
           TextButton(
             child: Text('確定'),
@@ -270,10 +291,22 @@ class _QuizPageState extends State<QuizPage> {
                       if (hasQuestionPic)
                         SizedBox(height: 16),
                       // 顯示題目文字
-                      Text(
-                        '${index + 1}. ${question['Questions']}',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
+                      if (question['Table_Name'] == 'Reading')
+                        Text(
+                          '${index + 1}. ${question['Questions']}',
+                          style: forHakkaBold,
+                        )
+                      else
+                        Row(
+                          children: [
+                            Text('${index + 1}.', style: forHakkaBold,),
+                            IconButton(
+                                icon: const Icon(Icons.volume_up_rounded),
+                                onPressed: () {
+                                  audioProvider.playAudio(question['Table_Name'], question['No']);
+                                }),
+                          ],
+                        ),
                       SizedBox(height: 8),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -302,6 +335,7 @@ class _QuizPageState extends State<QuizPage> {
                                         else
                                           Text(
                                             ' ${question['Option_1']}',
+                                            style: forHakkaText,
                                             textAlign: TextAlign.center,
                                           ),
                                       ],
@@ -339,6 +373,7 @@ class _QuizPageState extends State<QuizPage> {
                                         else
                                           Text(
                                             ' ${question['Option_2']}',
+                                            style: forHakkaText,
                                             textAlign: TextAlign.center,
                                           ),
                                       ],
@@ -376,6 +411,7 @@ class _QuizPageState extends State<QuizPage> {
                                         else
                                           Text(
                                             ' ${question['Option_3']}',
+                                            style: forHakkaText,
                                             textAlign: TextAlign.center,
                                           ),
                                       ],
@@ -400,7 +436,10 @@ class _QuizPageState extends State<QuizPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _submitAnswers,
+        onPressed: (){
+          _submitAnswers();
+          audioProvider.stopAudio();
+        },
         child: Center(
           child: Text(
             '提交',

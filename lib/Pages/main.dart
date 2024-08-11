@@ -51,7 +51,7 @@ Future<void> _createDatabaseTables(Database database) async {
   await database.execute('''
     CREATE TABLE IF NOT EXISTS quiz_score (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      score REAL,
+      score TEXT,
       timestamp TEXT
     )
   ''');
