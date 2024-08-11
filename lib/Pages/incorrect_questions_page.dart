@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'dart:io';
-import 'bottom_nav_bar.dart';
 
 class IncorrectQuestionsPage extends StatefulWidget {
   const IncorrectQuestionsPage({Key? key}) : super(key: key);
@@ -13,6 +12,16 @@ class IncorrectQuestionsPage extends StatefulWidget {
 
 class _IncorrectQuestionsPageState extends State<IncorrectQuestionsPage> {
   List<Map<String, dynamic>> _errors = [];
+  var hakkaText = const TextStyle(
+      fontFamily: 'forHakka',
+      fontWeight: FontWeight.bold,
+      fontSize: 16);
+  var optionText = const TextStyle(
+      fontFamily: 'forHakka',
+      fontSize: 14,
+      color: Colors.black87
+  );
+
 
   @override
   void initState() {
@@ -103,7 +112,7 @@ class _IncorrectQuestionsPageState extends State<IncorrectQuestionsPage> {
           final option1 = error['Option_1'];
           final option2 = error['Option_2'];
           final option3 = error['Option_3'];
-          final userAnswer = error['user_answer'];
+          final userAnswer = error['user_answer']==-1?'未作答':error['user_answer'].toString();
           final correctAnswer = error['correct_answer'];
 
           final questionImagePath = _getImagePath(tableName, questionId, 0);
@@ -164,9 +173,7 @@ class _IncorrectQuestionsPageState extends State<IncorrectQuestionsPage> {
                                 padding: const EdgeInsets.only(bottom: 16.0),
                                 child: Text(
                                   question,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),
+                                  style: hakkaText,
                                 ),
                               ),
                             LayoutBuilder(
@@ -275,7 +282,7 @@ class _IncorrectQuestionsPageState extends State<IncorrectQuestionsPage> {
               child: Text(
                 text,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14, color: Colors.black87),
+                style: optionText,
               ),
             ),
           if (hasPic) // 有圖片，則要記得顯示選項的數字

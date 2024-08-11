@@ -11,6 +11,9 @@ class ReadingTestPage extends StatefulWidget {
 class ReadingTestState extends State<ReadingTestPage> {
   final dbHelper = DatabaseHelper();
   List<Question>? _reading;
+  var hakkaText = const TextStyle(
+      fontFamily: 'forHakka',
+      fontSize: 16);
 
   @override
   void initState() {
@@ -51,12 +54,8 @@ class ReadingTestState extends State<ReadingTestPage> {
                   children: [
                     Row(
                       children: [
-                        Text(
-                          'No$no: ${reading.text}',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16.0,
-                          ),
+                        Text('No: $no',
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         IconButton(
                           icon: Icon(reading.isFavorite? Icons.star:Icons.star_border,
@@ -71,33 +70,38 @@ class ReadingTestState extends State<ReadingTestPage> {
                           },)
                       ],
                     ),
-
                     const SizedBox(height: 8.0),
+
+                    Text('Q：${reading.text}',
+                          style: hakkaText,
+                    ),
+                    const SizedBox(height: 8.0),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Expanded(
                           child: Card(
-                            child: Text('1. ${reading.opt[0]}', textAlign: TextAlign.center,),
+                            child: Text('1. ${reading.opt[0]}',style: hakkaText, textAlign: TextAlign.center,),
                           ),
                         ),
                         Expanded(
                           child: Card(
-                          child: Text('2. ${reading.opt[1]}', textAlign: TextAlign.center,),
+                          child: Text('2. ${reading.opt[1]}',style: hakkaText, textAlign: TextAlign.center,),
                         ),
                         ),
                         Expanded(
                             child: Card(
-                          child: Text('3. ${reading.opt[2]}', textAlign: TextAlign.center,),
+                          child: Text('3. ${reading.opt[2]}',style: hakkaText, textAlign: TextAlign.center,),
                         ),
                         )
                       ],
                     ),
                     const SizedBox(height: 8.0),
                     Text(
-                      'Answer: ${reading.ans}',
+                      'Answer：${reading.ans}. ${reading.opt[reading.ans-1]}',
                       style: const TextStyle(
-                        fontSize: 16.0,
+                        fontFamily: 'forHakka',
                         fontWeight: FontWeight.bold,
                         color: Colors.blueAccent,
                       ),

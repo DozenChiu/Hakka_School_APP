@@ -15,6 +15,9 @@ class DialogueState extends State<DialoguePage> {
   final imgProvider = ImgProvider();
   final audioProvider = AudioProvider();
   List<Question>? _listening;
+  var hakkaText = const TextStyle(
+      fontFamily: 'forHakka',
+      fontSize: 16);
 
   @override
   void initState() {
@@ -90,7 +93,7 @@ class DialogueState extends State<DialoguePage> {
                                 icon: const Icon(Icons.volume_up_rounded),
                                 onPressed: (){
                                   audioProvider.playAudio(
-                                      'Listen_2', no.toString());
+                                      'Listen_2', no);
                                 }),
                             IconButton(
                               icon: Icon(listening_2.isFavorite? Icons.star:Icons.star_border,
@@ -119,7 +122,7 @@ class DialogueState extends State<DialoguePage> {
                               ),
                             )
                           else
-                            Text(listening_2.text),
+                            Text('${listening_2.text}', style: hakkaText),
 
                           const SizedBox(height: 8),
 
@@ -141,6 +144,7 @@ class DialogueState extends State<DialoguePage> {
                                         else
                                           Text(
                                             '1. ${listening_2.opt[0]}',
+                                            style: hakkaText,
                                             textAlign: TextAlign.center,
                                           ),
                                       ],
@@ -161,6 +165,7 @@ class DialogueState extends State<DialoguePage> {
                                         else
                                           Text(
                                             '2. ${listening_2.opt[1]}',
+                                            style: hakkaText,
                                             textAlign: TextAlign.center,
                                           ),
                                       ],
@@ -181,6 +186,7 @@ class DialogueState extends State<DialoguePage> {
                                         else
                                           Text(
                                             '3. ${listening_2.opt[2]}',
+                                            style: hakkaText,
                                             textAlign: TextAlign.center,
                                           ),
                                       ],
@@ -192,10 +198,11 @@ class DialogueState extends State<DialoguePage> {
                           const SizedBox(height: 8),
 
                           Text(
-                            'Answer: ${listening_2.ans}',
+                            'Answer: ${listening_2.ans}. ${listening_2.opt[listening_2.ans-1]}',
                             style: const TextStyle(
-                              color: Colors.blueAccent,
+                              fontFamily: 'forHakka',
                               fontWeight: FontWeight.bold,
+                              color: Colors.blueAccent,
                             ),
                           ),
                         ],

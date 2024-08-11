@@ -21,7 +21,7 @@ samples, guidance on mobile development, and a full API reference.
 - 打算用 Flutter 取代原本 Android project
 
 ## 目標
-- UI 改好看
+- 能對應不同尺寸設備
 
 ## 新增資料表
 

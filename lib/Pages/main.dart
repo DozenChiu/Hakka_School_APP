@@ -53,7 +53,7 @@ Future<void> _createDatabaseTables(Database database) async {
   await database.execute('''
     CREATE TABLE IF NOT EXISTS quiz_score (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      score REAL,
+      score TEXT,
       timestamp TEXT
     )
   ''');
@@ -85,7 +85,7 @@ Future<void> _copyDatabaseFromAssets() async {
     try {
       final data = await rootBundle.load('assets/Quiz.db');
       final bytes =
-          data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+      data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
       await File(path).writeAsBytes(bytes, flush: true);
       print('Database copied successfully.');
     } catch (e) {

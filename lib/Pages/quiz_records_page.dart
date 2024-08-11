@@ -2,16 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'dart:io';
-import 'bottom_nav_bar.dart';
 
 class QuizRecordPage extends StatefulWidget {
+  const QuizRecordPage({super.key});
   @override
-  _QuizRecordPageState createState() => _QuizRecordPageState();
+  QuizRecordPageState createState() => QuizRecordPageState();
 }
 
-class _QuizRecordPageState extends State<QuizRecordPage> {
+class QuizRecordPageState extends State<QuizRecordPage> {
   List<Map<String, dynamic>> _quizScores = [];
   Map<int, List<Map<String, dynamic>>> _expandedRecords = {};
+  var hakkaText = const TextStyle(
+      fontFamily: 'forHakka',
+      fontSize: 16);
+  var optionText = const TextStyle(
+    fontFamily: 'forHakka',
+    fontSize: 14,
+      color: Colors.black87
+  );
 
   @override
   void initState() {
@@ -92,7 +100,7 @@ class _QuizRecordPageState extends State<QuizRecordPage> {
               subtitle: Text('日期: $timestamp'),
               children: _expandedRecords[testId]?.map((record) {
                     final question = record['Questions'] ?? '未知題目';
-                    final userAnswer = record['user_answer'];
+                    final userAnswer = record['user_answer']==-1?'未作答':record['user_answer'].toString();
                     final correctAnswer = record['correct_answer'];
                     final option1 = record['Option_1'];
                     final option2 = record['Option_2'];
@@ -139,15 +147,12 @@ class _QuizRecordPageState extends State<QuizRecordPage> {
                                       fit: BoxFit.contain,
                                     ),
                                   ),
-                                )
-                              else
+                                ),
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 16.0),
                                   child: Text(
                                     question,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16),
+                                    style: hakkaText,
                                   ),
                                 ),
                               // Display options with numbers
@@ -196,7 +201,7 @@ class _QuizRecordPageState extends State<QuizRecordPage> {
                               ),
                               SizedBox(height: 8),
                               Text(
-                                '您的答案: $userAnswer',
+                                '您的答案: ${userAnswer}',
                                 style: TextStyle(color: Colors.blue),
                               ),
                               Text(
@@ -209,7 +214,7 @@ class _QuizRecordPageState extends State<QuizRecordPage> {
                         );
                       },
                     );
-                  })?.toList() ??
+                  }).toList() ??
                   [
                     ListTile(
                       title: Text('點擊查看詳情'),
@@ -257,7 +262,7 @@ class _QuizRecordPageState extends State<QuizRecordPage> {
               child: Text(
                 text,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14, color: Colors.black87),
+                style: optionText,
               ),
             ),
           if (hasPic)

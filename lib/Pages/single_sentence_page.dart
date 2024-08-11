@@ -14,7 +14,9 @@ class SingleSentenceState extends State<SingleSentencePage> {
   final imgProvider = ImgProvider();
   final audioProvider = AudioProvider();
   List<Question>? _listening;
-
+  var hakkaText = const TextStyle(
+      fontFamily: 'forHakka',
+      fontSize: 16);
 
   @override
   void initState() {
@@ -90,7 +92,7 @@ class SingleSentenceState extends State<SingleSentencePage> {
                             IconButton(
                                 icon: const Icon(Icons.volume_up_rounded),
                                 onPressed: () {
-                                  audioProvider.playAudio(table, no.toString());
+                                  audioProvider.playAudio(table, no);
                                 }),
 
                               IconButton(
@@ -119,7 +121,7 @@ class SingleSentenceState extends State<SingleSentencePage> {
                               ),
                             )
                           else
-                            Text(listening_1.text),
+                            Text('${listening_1.text}', style: hakkaText,),
 
                           const SizedBox(height: 8),
 
@@ -142,6 +144,7 @@ class SingleSentenceState extends State<SingleSentencePage> {
                                         else
                                           Text(
                                             '1. ${listening_1.opt[0]}', // 顯示選項編號
+                                            style: hakkaText,
                                             textAlign: TextAlign.center,
                                           ),
                                       ],
@@ -162,6 +165,7 @@ class SingleSentenceState extends State<SingleSentencePage> {
                                         else
                                           Text(
                                             '2. ${listening_1.opt[1]}', // 顯示選項編號
+                                            style: hakkaText,
                                             textAlign: TextAlign.center,
                                           ),
                                       ],
@@ -182,6 +186,7 @@ class SingleSentenceState extends State<SingleSentencePage> {
                                         else
                                           Text(
                                             '3. ${listening_1.opt[2]}', // 顯示選項編號
+                                            style: hakkaText,
                                             textAlign: TextAlign.center,
                                           ),
                                       ],
@@ -193,10 +198,11 @@ class SingleSentenceState extends State<SingleSentencePage> {
                           const SizedBox(height: 8),
 
                           Text(
-                            'Answer: ${listening_1.ans}',
+                            'Answer: ${listening_1.ans}. ${listening_1.opt[listening_1.ans-1]}',
                             style: const TextStyle(
-                              color: Colors.blueAccent,
+                              fontFamily: 'forHakka',
                               fontWeight: FontWeight.bold,
+                              color: Colors.blueAccent,
                             ),
                           ),
                         ],

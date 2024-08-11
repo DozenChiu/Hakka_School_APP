@@ -28,14 +28,14 @@ class DatabaseHelper {
     final favoriteSet = favoriteRows.map((row) => row['No'] as int).toSet();
     final pair = await db.query(table, orderBy: 'No');
     final List<Question> pairToList = pair.map((e)=>
-    Question(
-        num: e['No'] as int,
-        text: e['Questions'] as String,
-        opt: [e['Option_1'] as String, e['Option_2'] as String, e['Option_3'] as String],
-        ans: e['Answer'] as int,
-        pic: e['HasPic'] as int,
-        table: table,
-        isFavorite: favoriteSet.contains(e['No']))
+        Question(
+            num: e['No'] as int,
+            text: e['Questions'] as String,
+            opt: [e['Option_1'] as String, e['Option_2'] as String, e['Option_3'] as String],
+            ans: e['Answer'] as int,
+            pic: e['HasPic'] as int,
+            table: table,
+            isFavorite: favoriteSet.contains(e['No']))
     ).toList();
     return pairToList;
   }
@@ -52,7 +52,7 @@ class DatabaseHelper {
         ''');
     List<Progress> p = data.map(
             (e) =>
-                Progress(
+            Progress(
                 table: e['table_name'] as String,
                 ttl: e['ttl'] as int,
                 correct: e['correct'] as int
@@ -66,9 +66,9 @@ class DatabaseHelper {
     final db = await database;
     // 檢查是否已經存在相同的記錄
     final  pair = await db.query(
-      'favorite',
-      where: 'Name = ? AND No = ?',
-      whereArgs: [table, no]
+        'favorite',
+        where: 'Name = ? AND No = ?',
+        whereArgs: [table, no]
     );
     // 如果記錄已經存在，則返回
     if (pair.isNotEmpty) {
@@ -76,8 +76,8 @@ class DatabaseHelper {
     }
     // 插入新的收藏記錄
     await db.insert(
-        'favorite',
-        {'Name': table, 'No': no},
+      'favorite',
+      {'Name': table, 'No': no},
       conflictAlgorithm: ConflictAlgorithm.ignore, // 避免插入時衝突
     );
   }
@@ -103,14 +103,14 @@ class DatabaseHelper {
     ''');
 
     final List<Question> pairToList = pair.map((e)=>
-    Question(
-      num: e['No'] as int,
-      text: e['Q'] as String,
-      opt: [e['opt1'] as String,e['opt2'] as String,e['opt3'] as String],
-      ans: e['ans'] as int,
-      pic: e['pic'] as int,
-      table: e['Name'] as String,
-    )
+        Question(
+          num: e['No'] as int,
+          text: e['Q'] as String,
+          opt: [e['opt1'] as String,e['opt2'] as String,e['opt3'] as String],
+          ans: e['ans'] as int,
+          pic: e['pic'] as int,
+          table: e['Name'] as String,
+        )
     ).toList();
     return pairToList;
   }
@@ -133,7 +133,7 @@ class Progress {
         required this.table,
         required this.correct
       }
-  );
+      );
 }
 // favorite 的資料型態
 class Like {
@@ -152,14 +152,14 @@ class Question {
   final String table;
   bool isFavorite;
   Question (
-  {
-    required this.num,
-    required this.text,
-    required this.opt,
-    required this.ans,
-    required this.pic,
-    required this.table,
-    this.isFavorite = false,
-  }
-  );
+      {
+        required this.num,
+        required this.text,
+        required this.opt,
+        required this.ans,
+        required this.pic,
+        required this.table,
+        this.isFavorite = false,
+      }
+      );
 }

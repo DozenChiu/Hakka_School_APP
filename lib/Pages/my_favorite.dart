@@ -89,7 +89,7 @@ class MyFavoriteState extends State<MyFavorite> {
                                                   IconButton(
                                                     icon: const Icon(Icons.volume_up_rounded),
                                                       onPressed: () {
-                                                        audioProvider.playAudio( question.table,no.toString());
+                                                        audioProvider.playAudio( question.table,no);
                                                     }),
                                                     IconButton(
                                                       icon: const Icon(Icons.star, color: Colors.yellow,),
