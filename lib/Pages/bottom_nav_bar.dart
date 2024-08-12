@@ -64,6 +64,8 @@ class BottomNavBar extends StatelessWidget {
       currentIndex: selectedIndex,
       selectedItemColor: Colors.amber[800], // 已選中項目的顏色
       unselectedItemColor: Colors.grey, // 未選中項目的顏色
+      showSelectedLabels: true, // 確保顯示選中的標籤
+      showUnselectedLabels: true, // 確保顯示未選中的標籤
       onTap: (index) => _onItemTapped(
           context, index != selectedIndex ? index : -1), // 點擊項目後調用的方法，後面塞判斷式
     );
