@@ -102,77 +102,96 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo', // 設置應用程序的標題
       theme: lightMode,
-      home: MyHomePage(), // 設置主頁面為 MyHomePage 小部件
+      home: const MyHomePage(), // 設置主頁面為 MyHomePage 小部件
     );
   }
 }
 
 class MyHomePage extends StatelessWidget {
-  MyHomePage({super.key});
+  const MyHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        // 設置頂部背景顏色為主題的主要顏色
-        title: const Text(
-          '首頁',
-          style: TextStyle(color: Colors.white), // 設置標題文字顏色為白色
-        ),
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0), // 設置內邊距為16.0
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center, // 主軸對齊方式設置為居中
-            children: <Widget>[
-              const Text(
-                '歡迎來到主頁', // 顯示歡迎文字
-                style: TextStyle(
-                    fontSize: 24, fontWeight: FontWeight.bold), // 設置文字大小和加粗
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton.icon(
-                label: const Text('查看測驗紀錄'),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => QuizRecordPage()),
-                  );
-                },
-              ),
-              const SizedBox(height: 20), // 添加一個高度為20的空間
-              ElevatedButton.icon(
-                label: const Text('查看錯誤題目'),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const IncorrectQuestionsPage()),
-                  );
-                },
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton.icon(
-                  label: const Text("我的題目"),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => MyFavorite()),
-                    );
-                  }),
-              const SizedBox(height: 20),
-              ElevatedButton.icon(
-                  label: const Text("關於"),
-                  onPressed: () {
-                    showAlertDialog(context);
-                  }),
-            ],
+    return LayoutBuilder(
+      builder: (context, constraints){
+        double fontSize = ((constraints.maxWidth/30)<24)?24:(constraints.maxWidth/30); // 設定字體根據寬度調整，保留最小大小
+        double paddingHeight = constraints.maxHeight/20; // 設定 SizedBox 根據高度調整
+        return Scaffold(
+          appBar: AppBar(
+            // 設置頂部背景顏色為主題的主要顏色
+            title: const Text(
+              '首頁',
+              style: TextStyle(color: Colors.white), // 設置標題文字顏色為白色
+            ),
           ),
-        ),
-      ),
-      bottomNavigationBar: const BottomNavBar(selectedIndex: 0), // 底部導航欄
+          body: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0), // 設置內邊距為16.0
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center, // 主軸對齊方式設置為居中
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Text(
+                    '歡迎來到主頁', // 顯示歡迎文字
+                    style: TextStyle(
+                        fontSize: fontSize, fontWeight: FontWeight.bold), // 設置文字大小和加粗
+                  ),
+                  SizedBox(height: paddingHeight),
+                  ElevatedButton.icon(
+                    label: Text('查看測驗紀錄',
+                      style: TextStyle(
+                          fontSize: fontSize*0.6),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const QuizRecordPage()),
+                      );
+                    },
+                  ),
+                  SizedBox(height: paddingHeight), // 添加一個高度為20的空間
+                  ElevatedButton.icon(
+                    label: Text('查看錯誤題目',
+                      style: TextStyle(
+                          fontSize: fontSize*0.6),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const IncorrectQuestionsPage()),
+                      );
+                    },
+                  ),
+                  SizedBox(height: paddingHeight),
+                  ElevatedButton.icon(
+                      label: Text("我的題目",
+                        style: TextStyle(
+                            fontSize: fontSize*0.6, fontWeight: FontWeight.normal),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const MyFavorite()),
+                        );
+                      }),
+                  SizedBox(height: paddingHeight),
+                  ElevatedButton.icon(
+                      label: Text("關於",
+                        style: TextStyle(
+                            fontSize: fontSize*0.6, fontWeight: FontWeight.normal),
+                      ),
+                      onPressed: () {
+                        showAlertDialog(context);
+                      }),
+                ],
+              ),
+            ),
+          ),
+          bottomNavigationBar: const BottomNavBar(selectedIndex: 0), // 底部導航欄
+        );
+      },
     );
   }
 

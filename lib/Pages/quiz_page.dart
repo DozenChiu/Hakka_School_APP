@@ -8,6 +8,8 @@ import 'quiz_records_page.dart';
 import 'package:flutter/services.dart' show rootBundle; // 讀取圖片方式的套件
 
 class QuizPage extends StatefulWidget {
+  const QuizPage({super.key});
+
   @override
   _QuizPageState createState() => _QuizPageState();
 }
@@ -15,7 +17,7 @@ class QuizPage extends StatefulWidget {
 class _QuizPageState extends State<QuizPage> {
   late Database _database;
   List<Map<String, dynamic>> _questions = []; // 存放挑選的問題
-  Map<int, int?> _answers = {}; // 存答題人的選擇答案
+  final Map<int, int?> _answers = {}; // 存答題人的選擇答案
   Timer? _timer; // 時間函數宣告
   int _remainingTime = 15 * 60; // 15分鐘倒計時，單位為秒
   final audioProvider = AudioProvider();
@@ -36,7 +38,7 @@ class _QuizPageState extends State<QuizPage> {
     super.initState();
     _initializeDatabase();
     //_startTimer(); // 開始倒數計時
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       _showStartDialog(); // 顯示開始對話框
     });
   }
@@ -83,7 +85,7 @@ class _QuizPageState extends State<QuizPage> {
   }
 
   void _startTimer() { // 計時動作
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         if (_remainingTime > 0) {
           _remainingTime--;
@@ -143,7 +145,7 @@ class _QuizPageState extends State<QuizPage> {
       });
     }
     // 計算成績
-    final score = ((correctAnswers / _questions.length) * 100).toStringAsFixed(0);;
+    final score = ((correctAnswers / _questions.length) * 100).toStringAsFixed(0);
     // 把成績和考試時間寫進資料庫 quiz_score
     await _database.insert('quiz_score', {
       'id': newTestId,
@@ -154,18 +156,18 @@ class _QuizPageState extends State<QuizPage> {
     showDialog(
       context: this.context,
       builder: (context) => AlertDialog(
-        title: Text('測驗結果'),
+        title: const Text('測驗結果'),
         content: Text('你答對了 $correctAnswers 題，得分為 $score 分。'),
         actions: <Widget>[
           TextButton(
-            child: Text('確定'),
+            child: const Text('確定'),
             onPressed: () {
               Navigator.of(context).pop();
               Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => MyHomePage()),
+                MaterialPageRoute(builder: (context) => const MyHomePage()),
               );
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => QuizRecordPage())
+                MaterialPageRoute(builder: (context) => const QuizRecordPage())
               );
             },
           ),
@@ -178,7 +180,7 @@ class _QuizPageState extends State<QuizPage> {
     await showDialog(
       context: this.context,
       builder: (context) => AlertDialog(
-        title: Text('測驗開始'),
+        title: const Text('測驗開始'),
         content: const Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -190,7 +192,7 @@ class _QuizPageState extends State<QuizPage> {
         ),
         actions: <Widget>[
           TextButton(
-            child: Text('確定'),
+            child: const Text('確定'),
             onPressed: () {
               Navigator.of(context).pop();
               _startTimer(); // 開始倒數計時
@@ -223,22 +225,22 @@ class _QuizPageState extends State<QuizPage> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('測驗'),
-            SizedBox(width: 20),
-            Text(
+            const Text('測驗'),
+            const SizedBox(width: 20),
+            const Text(
               '倒數計時',
               style: TextStyle(fontSize: 18),
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Text(
               _formatTime(_remainingTime),
-              style: TextStyle(fontSize: 18),
+              style: const TextStyle(fontSize: 18),
             ),
           ],
         ),
       ),
       body: _questions.isEmpty
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
         itemCount: _questions.length,
         itemBuilder: (context, index) {
@@ -263,9 +265,9 @@ class _QuizPageState extends State<QuizPage> {
               final hasQuestionPic = imageSnapshots.data![3];
 
               return Card(
-                margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                 child: Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -281,7 +283,7 @@ class _QuizPageState extends State<QuizPage> {
                         ),
                       // 題目圖片與題目文字之間留出空隙
                       if (hasQuestionPic)
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                       // 顯示題目文字
                       if (question['Table_Name'] == 'Reading')
                         Text(
@@ -299,7 +301,7 @@ class _QuizPageState extends State<QuizPage> {
                                 }),
                           ],
                         ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Wrap(
                         spacing: 8, // 設置按鈕之間的間距
                         runSpacing: 8, // 設置換行的間距
@@ -313,6 +315,11 @@ class _QuizPageState extends State<QuizPage> {
                                     _answers[question['No']] = 1;
                                   });
                                 },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: _answers[question['No']] == 1
+                                      ? Colors.orange
+                                      : null,
+                                ),
                                 child: Column(
                                   children: [
                                     Row(
@@ -340,11 +347,6 @@ class _QuizPageState extends State<QuizPage> {
                                     ),
                                   ],
                                 ),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: _answers[question['No']] == 1
-                                      ? Colors.orange
-                                      : null,
-                                ),
                               ),
                             ),
                           if (question['Option_2'] != null)
@@ -356,6 +358,11 @@ class _QuizPageState extends State<QuizPage> {
                                     _answers[question['No']] = 2;
                                   });
                                 },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: _answers[question['No']] == 2
+                                      ? Colors.orange
+                                      : null,
+                                ),
                                 child: Column(
                                   children: [
                                     Row(
@@ -383,11 +390,6 @@ class _QuizPageState extends State<QuizPage> {
                                     ),
                                   ],
                                 ),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: _answers[question['No']] == 2
-                                      ? Colors.orange
-                                      : null,
-                                ),
                               ),
                             ),
                           if (question['Option_3'] != null)
@@ -399,6 +401,11 @@ class _QuizPageState extends State<QuizPage> {
                                     _answers[question['No']] = 3;
                                   });
                                 },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: _answers[question['No']] == 3
+                                      ? Colors.orange
+                                      : null,
+                                ),
                                 child: Column(
                                   children: [
                                     Row(
@@ -426,11 +433,6 @@ class _QuizPageState extends State<QuizPage> {
                                     ),
                                   ],
                                 ),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: _answers[question['No']] == 3
-                                      ? Colors.orange
-                                      : null,
-                                ),
                               ),
                             ),
                         ],
@@ -448,7 +450,8 @@ class _QuizPageState extends State<QuizPage> {
           _submitAnswers();
           audioProvider.stopAudio();
         },
-        child: Center(
+        backgroundColor: Colors.blueAccent,
+        child: const Center(
           child: Text(
             '提交',
             style: TextStyle(
@@ -458,7 +461,6 @@ class _QuizPageState extends State<QuizPage> {
             ),
           ),
         ),
-        backgroundColor: Colors.blueAccent,
       ),
     );
   }

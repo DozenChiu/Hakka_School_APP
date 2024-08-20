@@ -1,8 +1,6 @@
 import 'package:Hakka_School/Services/audioProvider.dart';
 import 'package:Hakka_School/Services/database_helper.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 
 class MyFavorite extends StatefulWidget {
   const MyFavorite({super.key});
@@ -113,7 +111,7 @@ class MyFavoriteState extends State<MyFavorite> {
                                                   )
                                                 else
                                                   Text(question.text),
-                                                  SizedBox(height: 8),
+                                                  const SizedBox(height: 8),
                                                   // 選項圖片或文字
                                                   Row(
                                                     mainAxisSize: MainAxisSize.min,

@@ -4,13 +4,15 @@ import 'package:sqflite/sqflite.dart'; // 改成使用 sqflite
 import 'package:flutter/services.dart' show rootBundle; // 讀取圖片方式的套件
 
 class QuizRecordPage extends StatefulWidget {
+  const QuizRecordPage({super.key});
+
   @override
   _QuizRecordPageState createState() => _QuizRecordPageState();
 }
 
 class _QuizRecordPageState extends State<QuizRecordPage> {
   List<Map<String, dynamic>> _quizScores = [];
-  Map<int, List<Map<String, dynamic>>> _expandedRecords = {};
+  final Map<int, List<Map<String, dynamic>>> _expandedRecords = {};
   var hakkaText = const TextStyle(
       fontFamily: 'forHakka',
       fontSize: 16);
@@ -78,7 +80,7 @@ class _QuizRecordPageState extends State<QuizRecordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('測驗紀錄'),
+        title: const Text('測驗紀錄'),
       ),
       body: ListView.builder(
         itemCount: _quizScores.length,
@@ -89,11 +91,11 @@ class _QuizRecordPageState extends State<QuizRecordPage> {
           final timestamp = quizScore['timestamp'];
 
           return Card(
-            margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             child: ExpansionTile(
               title: Text(
                 '測驗 $testId: 得分 $score',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               subtitle: Text('日期: $timestamp'),
               children: _expandedRecords[testId]?.map((record) {
@@ -197,16 +199,16 @@ class _QuizRecordPageState extends State<QuizRecordPage> {
                                   );
                                 },
                               ),
-                              SizedBox(height: 8),
+                              const SizedBox(height: 8),
                               Text(
                                 '您的答案: $userAnswer',
-                                style: TextStyle(color: Colors.blue),
+                                style: const TextStyle(color: Colors.blue),
                               ),
                               Text(
                                 '正確答案: $correctAnswer',
-                                style: TextStyle(color: Colors.red),
+                                style: const TextStyle(color: Colors.red),
                               ),
-                              Divider(color: Colors.grey),
+                              const Divider(color: Colors.grey),
                             ],
                           ),
                         );
@@ -215,7 +217,7 @@ class _QuizRecordPageState extends State<QuizRecordPage> {
                   }).toList() ??
                   [
                     ListTile(
-                      title: Text('點擊查看詳情'),
+                      title: const Text('點擊查看詳情'),
                       onTap: () => _loadExpandedRecords(testId),
                     )
                   ],
@@ -229,8 +231,8 @@ class _QuizRecordPageState extends State<QuizRecordPage> {
   Widget _buildOption(bool hasPic, String imagePath, String text,
       int optionNumber, double textSize) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 8.0),
-      padding: EdgeInsets.all(8.0), // 增加 padding
+      margin: const EdgeInsets.symmetric(horizontal: 8.0),
+      padding: const EdgeInsets.all(8.0), // 增加 padding
       decoration: BoxDecoration(
         color: Colors.white, // Background color
         borderRadius: BorderRadius.circular(8.0), // 調圓角
@@ -239,7 +241,7 @@ class _QuizRecordPageState extends State<QuizRecordPage> {
             color: Colors.grey.withOpacity(0.2),
             spreadRadius: 2,
             blurRadius: 4,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -269,7 +271,7 @@ class _QuizRecordPageState extends State<QuizRecordPage> {
               child: Text(
                 '$optionNumber',
                 style:
-                    TextStyle(fontSize: 14, color: Colors.black87), // 選項圖片的數字
+                    const TextStyle(fontSize: 14, color: Colors.black87), // 選項圖片的數字
               ),
             ),
         ],

@@ -4,7 +4,7 @@ import 'package:sqflite/sqflite.dart'; // 修改這裡，改成sqflite
 import 'package:flutter/services.dart' show rootBundle; // 讀取圖片方式的套件
 
 class IncorrectQuestionsPage extends StatefulWidget {
-  const IncorrectQuestionsPage({Key? key}) : super(key: key);
+  const IncorrectQuestionsPage({super.key});
 
   @override
   _IncorrectQuestionsPageState createState() => _IncorrectQuestionsPageState();
@@ -113,12 +113,12 @@ class _IncorrectQuestionsPageState extends State<IncorrectQuestionsPage> {
           final questionImagePath = _getImagePath(tableName, questionId, 0);
 
           return Card(
-            margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             child: ExpansionTile(
               title: Text(
                 //'From : $tableName',
                 '題目來自於 : ${_convertTableName(tableName)} - 題號: $questionId',
-                style: TextStyle(
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                   color: Colors.blueAccent,
@@ -213,16 +213,16 @@ class _IncorrectQuestionsPageState extends State<IncorrectQuestionsPage> {
                                 );
                               },
                             ),
-                            SizedBox(height: 8),
+                            const SizedBox(height: 8),
                             Text(
                               '您的答案: $userAnswer',
-                              style: TextStyle(color: Colors.blue),
+                              style: const TextStyle(color: Colors.blue),
                             ),
                             Text(
                               '正確答案: $correctAnswer',
-                              style: TextStyle(color: Colors.red),
+                              style: const TextStyle(color: Colors.red),
                             ),
-                            Divider(color: Colors.grey),
+                            const Divider(color: Colors.grey),
                           ],
                         ),
                       );
@@ -245,8 +245,8 @@ class _IncorrectQuestionsPageState extends State<IncorrectQuestionsPage> {
   Widget _buildOption(bool hasPic, String imagePath, String text,
       int optionNumber, double textSize) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 8.0),
-      padding: EdgeInsets.all(8.0),
+      margin: const EdgeInsets.symmetric(horizontal: 8.0),
+      padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
         // 這邊就只是選項的底色方塊，會隨著頁面一起縮放
         color: Colors.white,
@@ -256,7 +256,7 @@ class _IncorrectQuestionsPageState extends State<IncorrectQuestionsPage> {
             color: Colors.grey.withOpacity(0.2),
             spreadRadius: 2,
             blurRadius: 4,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -285,7 +285,7 @@ class _IncorrectQuestionsPageState extends State<IncorrectQuestionsPage> {
               padding: const EdgeInsets.only(top: 4.0),
               child: Text(
                 '$optionNumber',
-                style: TextStyle(fontSize: 14, color: Colors.black87),
+                style: const TextStyle(fontSize: 14, color: Colors.black87),
               ),
             ),
         ],

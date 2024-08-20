@@ -121,7 +121,7 @@ class SingleSentenceState extends State<SingleSentencePage> {
                               ),
                             )
                           else
-                            Text('${listening_1.text}', style: hakkaText,),
+                            Text(listening_1.text, style: hakkaText,),
 
                           const SizedBox(height: 8),
 

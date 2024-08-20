@@ -72,7 +72,7 @@ class ReadingTestState extends State<ReadingTestPage> {
                     ),
                     const SizedBox(height: 8.0),
 
-                    Text('${reading.text}',
+                    Text(reading.text,
                       style: hakkaText,
                     ),
                     const SizedBox(height: 8.0),
